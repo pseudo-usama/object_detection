@@ -2,3 +2,4 @@ __pycache__
 .vscode
 
 yolov3-spp.weights
+indexed-images

@@ -25,9 +25,7 @@ def detect_objects(img):
 
 
 def process_objects(objects, width, height):
-    classIds = []
-    confidences = []
-    boxes = []
+    detectedObjects = []
     for obj in objects:
         for detection in obj:
             scores = detection[5:]
@@ -39,13 +37,34 @@ def process_objects(objects, width, height):
                 centerY = int(detection[1]*height)
                 w = int(detection[2]*width)
                 h = int(detection[3]*height)
+                topLeft = (int(centerX-w/2), int(centerY-h/2))
 
-                topLeftX = int(centerX-w/2)
-                topLeftY = int(centerY-h/2)
-                # bottomRight = (int(centerX+w/2), int(centerY+h/2))
+                detectedObjects.append({
+                    'center': (centerX, centerY),
+                    'dimentions': (w, h),
+                    'topLeft': topLeft,
+                    'confidence': float(confidence),
+                    'classId': classId
+                })
 
-                boxes.append([topLeftX, topLeftY, w, h, centerX, centerY])
-                confidences.append(float(confidence))
-                classIds.append(classId)
+    return detectedObjects
 
-    return classIds, confidences, boxes
+
+def remove_duplicated_objects(objects):
+    boxes = []
+    classIds = []
+    confidences = []
+    for obj in objects:
+        boxes.append([
+            int(obj['center'][0]-obj['dimentions'][0]/2),
+            int(obj['center'][1]-obj['dimentions'][1]/2),
+            obj['dimentions'][0],
+            obj['dimentions'][1]
+        ])
+        classIds.append(obj['classId'])
+        confidences.append(obj['confidence'])
+
+    indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+    remainingObjects = [obj for i, obj in enumerate(objects) if i in indexes]
+
+    return remainingObjects

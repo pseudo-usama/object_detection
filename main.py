@@ -1,12 +1,12 @@
 import cv2
 import numpy as np
-from show_images import mark_objects, show
-from object_detection.detect import detect_objects, process_objects
-from processing import find_origin, find_areas, find_area_ratios, find_angles, find_distances
+from show_images import show
+from object_detection.detect import detect_objects, process_objects, remove_duplicated_objects
+from processing import find_areas, sort_wrt_area, find_area_ratios, find_angles, find_distances
 from db import insert
 
 
-image_name = 'office.jpg'
+image_name = 'resturant.jpg'
 
 
 # Loading Image
@@ -15,19 +15,22 @@ height, width, channels = img.shape
 
 
 objects = detect_objects(img)   # Detecting objects
-classIds, confidences, boxes = process_objects(
-    objects, width, height)  # Extracting detected objects
+extractedObjects = process_objects(objects, width, height)
+extractedObjects = remove_duplicated_objects(extractedObjects)
 
 
 # Processing the objects
 def calc_objects_attr():
-    areas = find_areas(boxes)
-    originIndex = find_origin(boxes, areas)
-    area_ratios = find_area_ratios(areas[originIndex], areas)
-    distances = find_distances(boxes, originIndex)
-    angles = find_angles(boxes, originIndex)
+    global extractedObjects
 
-    return area_ratios, distances, angles
+    find_areas(extractedObjects)
+    extractedObjects = sort_wrt_area(extractedObjects)
+
+    areaRatios = find_area_ratios(extractedObjects)
+    distances = find_distances(extractedObjects)
+    angles = find_angles(extractedObjects)
+
+    return areaRatios, distances, angles
 
 
 # Insert to Database
@@ -40,12 +43,11 @@ def insert_to_DB(area_ratios, distances, angles):
     })
 
 
-if len(boxes) > 0:
+if len(extractedObjects) > 0:
     area_ratios, distances, angles = calc_objects_attr()
     insert_to_DB(area_ratios, distances, angles)
 else:
     insert_to_DB([], [], [])
 
 
-mark_objects(img, boxes, classIds, confidences)
-show(img)
+show(img, extractedObjects)

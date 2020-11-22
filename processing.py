@@ -1,56 +1,50 @@
 from math import dist, atan, degrees
 
 
-def find_areas(boxes):
-    areas = [box[2]*box[3] for box in boxes]
-
-    return areas
-
-
-def find_origin(boxes, areas):
-    if len(boxes) == 0:
-        return None
-
-    maxAria = max(areas)
-    bigBoxesIndex = [i for i, aria in enumerate(areas) if aria == maxAria]
-
-    if len(bigBoxesIndex) == 1:
-        return bigBoxesIndex[0]
-
-    # I've to write code
-    # To find the first object
-    return bigBoxesIndex[0]
+def find_areas(objects):
+    for obj in objects:
+        obj.update({'area': obj['dimentions'][0]*obj['dimentions'][1]})
 
 
-def find_area_ratios(origin_area, areas):
-    area_ratios = [area/origin_area for area in areas]
+def sort_wrt_area(objects):
+    # Here we are sorting the object
+    # W.R.T Area
+    # If area is equal then
+    # W.R.T its topLeft corner
+    sortedObjects = sorted(objects, key=lambda obj:
+                           (obj['area'], obj['topLeft'][1], obj['topLeft'][0]))
 
-    return area_ratios
+    return sortedObjects
 
 
-def find_distances(boxes, originIndex):
-    origin = boxes[originIndex]
-    distances = [dist([box[4], box[5]], [origin[4], origin[5]])
-                 for box in boxes]
+def find_area_ratios(objects):
+    originObjectArea = objects[0]['area']
+    areaRatios = [obj['area']/originObjectArea for obj in objects]
+    return areaRatios
+
+
+def find_distances(objects):
+    originObjectCenter = objects[0]['center']
+    distances = [dist(obj['center'], originObjectCenter)
+                 for obj in objects]
 
     return distances
 
 
-def find_angles(boxes, originIndex):
+def find_angles(objects):
     angles = []
-    
-    for box in boxes:
-        x = box[4]
-        y = box[5]
 
+    for obj in objects:
+        x = obj['center'][0]
+        y = obj['center'][1]
         angle = degrees(atan(abs(y/x)))
 
         if x < 0 and y > 0:     # 2nd Quadrant
-            angle += 90
+            angle = 180 - angle
         elif x < 0 and y < 0:   # 3rd Quandrant
             angle += 180
         elif x > 0 and y < 0:   # 4th Quandrant
-            angle += 270
+            angle = 360 - angle
 
         angles.append(angle)
 
