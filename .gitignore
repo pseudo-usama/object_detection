@@ -1,5 +1,8 @@
 __pycache__
 .vscode
+asdf
+
+/images
 
 yolov3-spp.weights
 indexed-images

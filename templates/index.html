@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image-based Search Engine</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/photoswipe.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/default-skin.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.min.css') }}" />
+
+    <script src="{{ url_for('static', filename='scripts/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/photoswipe.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/photoswipe-ui-default.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/jqPhotoSwipe.js') }}"></script>
+</head>
+
+<body>
+    <header>
+        <h1>
+            <a href="/">Image-based Search Engine</a>
+        </h1>
+    </header>
+
+    <section id="inner-body">
+        <form action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data">
+            {% include('file-upload.html') %}
+            <input type="text" value="this is some value" name="myinput">
+            <input type="submit" name="submit" value="Only Submit">
+        </form>
+
+        <div id="results">{% include('photoswipe.html') %}</div>
+    </section>
+</body>
+
+</html>

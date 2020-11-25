@@ -1,0 +1,24 @@
+{% for i in range(10) %}
+<a class="fancybox" href="https://images2.alphacoders.com/884/thumb-1920-884559.jpg" title="Photo Caption #1"
+    alt="Photo Caption #1">
+    <img src="https://images2.alphacoders.com/884/thumb-1920-884559.jpg" border="0" class="thumb" />
+</a>
+{% endfor %}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".fancybox").jqPhotoSwipe({
+            galleryOpen: function (gallery) {
+                //with `gallery` object you can access all methods and properties described here http://photoswipe.com/documentation/api.html
+                //console.log(gallery)
+                //console.log(gallery.currItem)
+                //console.log(gallery.getCurrentIndex())
+                //gallery.toggleDesktopZoom()
+            },
+        })
+        $(".forcedgallery a").jqPhotoSwipe({
+            forceSingleGallery: true,
+        })
+    })
+</script>
