@@ -26,7 +26,6 @@
     <section id="inner-body">
         <form action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data">
             {% include('file-upload.html') %}
-            <input type="text" value="this is some value" name="myinput">
             <input type="submit" name="submit" value="Only Submit">
         </form>
 

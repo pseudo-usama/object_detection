@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 
 
-net = cv2.dnn.readNet('object_detection/yolov3-spp.weights',
-                      'object_detection/yolov3-spp.cfg')
+net = cv2.dnn.readNet('detector/object_detection/yolov3-spp.weights',
+                      'detector/object_detection/yolov3-spp.cfg')
 
 layerNames = net.getLayerNames()
 outputLayers = [layerNames[i[0]-1]for i in net.getUnconnectedOutLayers()]
