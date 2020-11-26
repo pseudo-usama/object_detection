@@ -1,0 +1,19 @@
+{
+    "_comment": "n'th object",
+    "1": {
+        "_comment": "Divided into ranges of area ratio. Each object have range 0.1",
+        "0.1": {
+            "_comment": "Divided into ranges of distance ratio",
+            "1": {
+                "_comment": "Divided into ranges of angles. Each obj range is 10 degrees",
+                "10": {
+                    "imageName": "name.jpg"
+                },
+                "20": {}
+            },
+            "2": {}
+        },
+        "0.2": {}
+    },
+    "2": {}
+}
