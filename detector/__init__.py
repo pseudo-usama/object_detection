@@ -2,7 +2,7 @@ from math import ceil
 import cv2
 import numpy as np
 from config import *
-from detector.schema import *
+from DB.schema import *
 from detector.show_images import show
 from detector.object_detection.detect import *
 from detector.processing import *

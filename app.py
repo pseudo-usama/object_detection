@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 from config import *
 from detector import detect_objs
-from db import insert as insert_toDB
+from DB import insert as insert_toDB
 
 
 app = Flask(__name__)
