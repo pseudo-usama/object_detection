@@ -24,12 +24,22 @@
     </header>
 
     <section id="inner-body">
-        <form action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" name="form">
             {% include('file-upload.html') %}
-            <input type="submit" name="submit" value="Only Submit">
+            <div class="form-btns">
+                <input class="submit-btn" type="submit" name="submit" value="Only Submit"
+                    onclick="form.action='/submit'">
+                <input class="search-btn" type="submit" name="search" value="Search" onclick="form.action='/search'">
+            </div>
         </form>
 
-        <div id="results">{% include('photoswipe.html') %}</div>
+        {% if data.error == 'no_data_and_error' %}
+            <p class="info-text">Submit an image to see related images.</p>
+        {% elif data.error == 'no_img_found' %}
+            <p class="info-text error">Sorry! We could not found related images.</p>
+        {% else %}
+            <div id="results">{% include 'photoswipe.html' %}</div>
+        {% endif %}
     </section>
 </body>
 

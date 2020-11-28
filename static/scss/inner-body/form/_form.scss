@@ -1,0 +1,54 @@
+@import 'variables';
+@import 'file-upload';
+
+form {
+    margin-bottom: 5px;
+}
+
+.form-btns {
+    width: 600px;
+    margin: auto;
+    text-align: center;
+}
+
+// Buttons
+.submit-btn,
+.search-btn {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    color: white;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: $transition;
+}
+
+.submit-btn {
+    background: $green-primary;
+    box-shadow: 0 4px $green-secondary;
+
+    &:hover {
+        background: $green-primary-hover;
+    }
+
+    &:active {
+        transform: translateY(4px);
+        box-shadow: 0 0 $green-secondary;
+    }
+}
+
+.search-btn {
+    background: $blue-primary;
+    box-shadow: 0 4px $blue-secondary;
+
+    &:hover {
+        background: $blue-primary-hover;
+    }
+
+    &:active {
+        transform: translateY(4px);
+        box-shadow: 0 0 $blue-secondary;
+    }
+}
