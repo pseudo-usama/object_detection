@@ -5,5 +5,5 @@ asdf
 
 yolov3-spp.weights
 
-/images
-/indexed-images
+/images/*
+/static/images/indexed/*
