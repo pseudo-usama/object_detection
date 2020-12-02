@@ -6,10 +6,10 @@
             "_comment": "Divided into ranges of distance ratio",
             "1": {
                 "_comment": "Divided into ranges of angles. Each obj range is 10 degrees",
-                "10": {
-                    "imageName": "name.jpg"
-                },
-                "20": {}
+                "10": [
+                    "name.jpg"
+                ],
+                "20": []
             },
             "2": {}
         },

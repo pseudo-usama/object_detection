@@ -9,6 +9,6 @@ def insert(data):
     collection.update_one({'_id': 1}, {'$push': data}, upsert=True)
 
 
-def read():
-    document = collection.find_one({'_id': 1})
+def read(query):
+    document = collection.find_one({'_id': 1}, query)
     return document
