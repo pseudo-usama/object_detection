@@ -1,6 +1,7 @@
-import pymongo
+from pymongo import MongoClient
 
-client = pymongo.MongoClient('mongodb://localhost:27017')
+
+client = MongoClient('mongodb://localhost:27017')
 db = client['object_detection']
 collection = db['object_detection']
 
