@@ -1,9 +1,13 @@
+"""
+This file actually detect the object from image.
+"""
+
 import cv2
 import numpy as np
 
 
-net = cv2.dnn.readNet('detector/object_detection/yolov3-spp.weights',
-                      'detector/object_detection/yolov3-spp.cfg')
+net = cv2.dnn.readNet('object_detector/detect/yolov3-spp.weights',
+                      'object_detector/detect/yolov3-spp.cfg')
 
 layerNames = net.getLayerNames()
 outputLayers = [layerNames[i[0]-1]for i in net.getUnconnectedOutLayers()]

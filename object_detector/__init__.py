@@ -1,11 +1,18 @@
+"""
+This module detect the objects in images with the help of object_detector/detect/__init__.py
+And then process detected objects data.
+Like calculating area ratios, calculate angles etc
+And then convert that results into a predefined database structure.
+You can view that database structure at DB/structure.json
+"""
+
 from math import ceil
 import cv2
-import numpy as np
 from config import *
 from DB.schema import *
-from detector.show_images import show
-from detector.object_detection.detect import *
-from detector.processing import *
+from object_detector.show_images import show
+from object_detector.detect import *
+from object_detector.processing import *
 
 
 def detect_objs(imgName):

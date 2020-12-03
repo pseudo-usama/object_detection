@@ -1,3 +1,8 @@
+"""
+This drops the database.
+And delete all indexed images.
+"""
+
 from pymongo import MongoClient
 import os
 
