@@ -10,9 +10,13 @@ from math import ceil
 import cv2
 from config import *
 from DB.schema import *
-from object_detector.show_images import show
-from object_detector.detect import *
-from object_detector.processing import *
+# Object detection
+from detector.object_detector import *
+from detector.processing import *
+# OCR
+from detector.OCR import detect_text
+
+from detector.show_images import show
 
 
 def detect_objs(imgName):
@@ -24,13 +28,16 @@ def detect_objs(imgName):
     extractedObjects = process_objects(objects, width, height)
     extractedObjects = remove_duplicated_objects(extractedObjects)
 
+    texts = detect_text(img)
+
+    show(img, extractedObjects, texts)
+
     if len(extractedObjects) > 0:
         objects = calc_objects_attr(extractedObjects)
         toDB = index_for_DB(objects, imgName)
 
         return toDB
 
-    # show(img, extractedObjects)
     return None
 
 

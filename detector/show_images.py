@@ -2,9 +2,11 @@ import cv2
 import numpy as np
 
 
-def show(img, objects=None):
+def show(img, objects=None, texts=None):
     if objects is not None:
         mark_objects(img, objects)
+    if texts is not None:
+        mark_texts(img, texts)
 
     img = cv2.resize(img, None, fx=0.5, fy=0.5)
     cv2.imshow('Image', img)
@@ -24,9 +26,16 @@ def mark_objects(img, objects):
                     cv2.FONT_HERSHEY_PLAIN, 3, colors[i], 3)
 
 
+def mark_texts(img, texts):
+    for text in texts:
+        bottomRight = (text['topLeft'][0]+text['dimensions']
+                       [0], text['topLeft'][1]+text['dimensions'][1])
+        cv2.rectangle(img, text['topLeft'], bottomRight, (0, 255, 0), 2)
+
+
 # Reading the class names
 classes = []
-with open('object_detector/coco.names', 'r') as f:
+with open('detector/coco.names', 'r') as f:
     classes = [line.strip() for line in f.readlines()]
 # Defining different colors for each class
 colors = np.random.uniform(0, 255, size=(len(classes), 3))

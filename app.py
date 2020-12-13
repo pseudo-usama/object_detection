@@ -3,7 +3,7 @@ from os.path import splitext as splitFileName
 from uuid import uuid1
 from flask import Flask, request, render_template, redirect
 from config import *
-from object_detector import detect_objs
+from detector import detect_objs
 from DB import insert as insert_toDB
 from DB.search import search as search_inDB
 
