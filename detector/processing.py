@@ -28,11 +28,12 @@ def find_distances(objects):
 
     # Distance between two largest objects
     originObjectCenter = objects[0]['center']
-    distance = dist(originObjectCenter, objects[1]['center'])
+    # Distance b/w Origin & 2nd largest object (w.r.t Area)
+    referenceDistance = dist(originObjectCenter, objects[1]['center'])
 
     for obj in objects[2:]:
         obj.update({'distanceRatio':
-                    dist(obj['center'], originObjectCenter)/distance})
+                    dist(obj['center'], originObjectCenter)/referenceDistance})
 
 
 def find_angles(objects):
