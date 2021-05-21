@@ -23,25 +23,21 @@ from detector.show_images import show
 def detect_objs(imgName):
     # Loading Image
     img = cv2.imread(UPLOADED_IMGS_DIR+imgName)
-    height, width, channels = img.shape
 
-    objects = detect_objects(img)   # Detecting objects
-    extractedObjects = process_objects(objects, width, height)
-    extractedObjects = remove_duplicated_objects(extractedObjects)
+    objs = detect_objects(img)   # Detecting objects
 
-    if len(extractedObjects) == 0:
+    if len(objs) == 0:
         return None
 
     boundingBoxes = None
-    if len(extractedObjects) == 2:
+    if len(objs) == 2:
         boundingBoxes = detect_text(img)
-        find_distances_to_origin(boundingBoxes, extractedObjects[0])
+        find_distances_to_origin(boundingBoxes, objs[0])
 
-    show(img, extractedObjects, boundingBoxes)
-
-    objects = calc_objects_attr(extractedObjects)
+    objects = calc_objects_attr(objs)
     toDB = index_for_DB(objects, imgName)
 
+    show(img, objs, boundingBoxes)
     print(toDB)
 
     return toDB

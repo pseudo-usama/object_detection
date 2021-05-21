@@ -14,8 +14,8 @@ outputLayers = [layerNames[i[0]-1]for i in net.getUnconnectedOutLayers()]
 
 
 def detect_objects(img):
-    blob = cv2.dnn.blobFromImage(
-        img, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+    blob = cv2.dnn.blobFromImage(img, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+    height, width, channels = img.shape
 
     # Print all channels of images
     # for b in blob:
@@ -25,7 +25,10 @@ def detect_objects(img):
     net.setInput(blob)
     outs = net.forward(outputLayers)
 
-    return outs
+    processed_objs = process_objects(outs, width, height)
+    removed_duplicated_objs = remove_duplicated_objects(processed_objs)
+
+    return removed_duplicated_objs
 
 
 def process_objects(objects, width, height):
