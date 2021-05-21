@@ -3,7 +3,7 @@ from os.path import splitext as splitFileName
 from uuid import uuid1
 from flask import Flask, request, render_template, redirect
 from config import *
-from detector import detect_objs
+from detector import detect_objs_and_text
 from DB import insert as insert_toDB
 from DB.search import search as search_inDB
 
@@ -19,9 +19,10 @@ def index():
 @app.route('/submit', methods=['POST'])
 def submit():
     imgName = save_file()
-    objs = detect_objs(imgName)
+    objs = detect_objs_and_text(imgName)
 
     if objs is not None:
+        # TODO: If objs is None then the file should be Delete
         move_file(UPLOADED_IMGS_DIR+imgName, INDEXED_IMGS_DIR+imgName)
         insert_toDB(objs)
 
@@ -31,7 +32,7 @@ def submit():
 @app.route('/search', methods=['POST'])
 def search():
     imgName = save_file()
-    objs = detect_objs(imgName)
+    objs = detect_objs_and_text(imgName)
 
     if objs is None:
         return render_template('index.html', template='no_img_found')

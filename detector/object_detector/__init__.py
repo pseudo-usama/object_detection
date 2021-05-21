@@ -1,6 +1,7 @@
 """
-This file actually detect the object from image.
+This module actually detect & process the object from image.
 """
+
 
 import cv2
 import numpy as np
@@ -75,3 +76,12 @@ def remove_duplicated_objects(objects):
     remainingObjects = [obj for i, obj in enumerate(objects) if i in indexes]
 
     return remainingObjects
+
+
+if __name__ == '__main__':
+    print(
+"""This is a module to detect objects from an image.
+Try importing & calling detect_objects(cv2.imread(<path_to_your_image>))
+And it will return the detected objects from the image.
+Good luck ;)"""
+)

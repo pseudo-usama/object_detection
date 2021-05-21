@@ -6,12 +6,13 @@ And then convert that results into a predefined database structure.
 You can view that database structure at DB/structure.json
 """
 
+
 from math import ceil
 import cv2
 from config import *
 from DB.schema import *
 # Object detection
-from detector.object_detector import *
+from detector.object_detector import detect_objects
 from detector.processing import *
 # OCR
 from detector.OCR import detect_text
@@ -20,7 +21,7 @@ from detector.process import find_distances_to_origin
 from detector.show_images import show
 
 
-def detect_objs(imgName):
+def detect_objs_and_text(imgName):
     # Loading Image
     img = cv2.imread(UPLOADED_IMGS_DIR+imgName)
 
@@ -55,6 +56,7 @@ def calc_objects_attr(extractedObjects):
     return extractedObjects
 
 
+# Index the data according to database schema
 def index_for_DB(objects, imgName):
     data = {}
     for i, obj in enumerate(objects):
@@ -76,4 +78,9 @@ def index_for_DB(objects, imgName):
 
 
 if __name__ == "__main__":
-    print("...")
+    print(
+"""This is the module to detecte objects & texts in images.
+Try importing & calling detect_objs(<path_to_your_image>)
+And it will return an dictionary of detected objects & texts.
+Good luck ;)"""
+)
