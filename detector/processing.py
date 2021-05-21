@@ -1,4 +1,7 @@
-from math import dist, atan, degrees
+from math import atan, degrees, sqrt
+
+def dist(p1, p2):
+    return sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
 
 
 def find_areas(objects):

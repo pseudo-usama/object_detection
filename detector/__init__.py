@@ -15,6 +15,7 @@ from detector.object_detector import *
 from detector.processing import *
 # OCR
 from detector.OCR import detect_text
+from detector.process import find_distances_to_origin
 
 from detector.show_images import show
 
@@ -28,17 +29,22 @@ def detect_objs(imgName):
     extractedObjects = process_objects(objects, width, height)
     extractedObjects = remove_duplicated_objects(extractedObjects)
 
-    texts = detect_text(img)
+    if len(extractedObjects) == 0:
+        return None
 
-    show(img, extractedObjects, texts)
+    boundingBoxes = None
+    if len(extractedObjects) == 2:
+        boundingBoxes = detect_text(img)
+        find_distances_to_origin(boundingBoxes, extractedObjects[0])
 
-    if len(extractedObjects) > 0:
-        objects = calc_objects_attr(extractedObjects)
-        toDB = index_for_DB(objects, imgName)
+    show(img, extractedObjects, boundingBoxes)
 
-        return toDB
+    objects = calc_objects_attr(extractedObjects)
+    toDB = index_for_DB(objects, imgName)
 
-    return None
+    print(toDB)
+
+    return toDB
 
 
 # Processing the objects

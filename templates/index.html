@@ -35,7 +35,7 @@
         {% if data.error == 'no_data_and_error' %}
             <p class="info-text">Submit an image to see related images.</p>
         {% elif data.error == 'no_img_found' %}
-            <p class="info-text error">Sorry! We could not found related images.</p>
+            <p class="info-text error">Sorry! We could not find related images.</p>
         {% else %}
             <div id="results">{% include 'photoswipe.html' %}</div>
         {% endif %}

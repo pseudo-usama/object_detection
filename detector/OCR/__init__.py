@@ -15,7 +15,7 @@ def detect_text(img):
             texts.append({
                 'topLeft': (d['left'][i], d['top'][i]),
                 'dimensions': (d['width'][i], d['height'][i]),
-                'text': d['text']
+                'text': d['text'][i]
             })
 
     return texts
