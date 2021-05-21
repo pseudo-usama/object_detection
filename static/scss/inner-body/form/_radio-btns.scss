@@ -1,0 +1,15 @@
+#radio-options {
+    margin-top: 10px;
+    
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+    * {
+        cursor: pointer;
+    }
+
+    div:not(:last-child) {
+        margin-right: 10px;
+    }
+}
