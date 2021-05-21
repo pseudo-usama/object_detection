@@ -13,13 +13,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html', data={'error': 'no_data_and_error'})
+    return render_template('index.html', template='default')
 
 
 @app.route('/submit', methods=['POST'])
 def submit():
     imgName = save_file()
     objs = detect_objs(imgName)
+
     if objs is not None:
         move_file(UPLOADED_IMGS_DIR+imgName, INDEXED_IMGS_DIR+imgName)
         insert_toDB(objs)
@@ -33,16 +34,17 @@ def search():
     objs = detect_objs(imgName)
 
     if objs is None:
-        return render_template('index.html', data={'error': 'no_img_found'})
+        return render_template('index.html', template='no_img_found')
 
     imgs = search_inDB(objs)
     move_file(UPLOADED_IMGS_DIR+imgName, INDEXED_IMGS_DIR+imgName)
     insert_toDB(objs)
 
     if imgs is None:
-        return render_template('index.html', data={'error': 'no_img_found'})
+        return render_template('index.html', template='no_img_found')
 
-    return render_template('index.html', data={'error': '', 'imgs': [INDEXED_IMGS_DIR+img for img in imgs]})
+    imgs = [INDEXED_IMGS_DIR+img for img in imgs]
+    return render_template('index.html', template='gallary', imgs=imgs)
 
 
 def save_file():

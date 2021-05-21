@@ -33,13 +33,8 @@
             </div>
         </form>
 
-        {% if data.error == 'no_data_and_error' %}
-            <p class="info-text">Submit an image to see results.</p>
-        {% elif data.error == 'no_img_found' %}
-            <p class="info-text error">Sorry! We could not find related images.</p>
-        {% else %}
-            <div id="results">{% include 'photoswipe.html' %}</div>
-        {% endif %}
+        <!-- Including sub template -->
+        {% include 'sub-templates/' + template + '.html' %}
     </section>
 </body>
 
