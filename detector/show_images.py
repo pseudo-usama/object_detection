@@ -1,7 +1,12 @@
+# These function are just for debugging purposes
+
+
 import cv2
 import numpy as np
 
 
+# This function marks detected obecjs & texts
+# And show in a window
 def show(img, objects=None, texts=None):
     if objects is not None:
         mark_objects(img, objects)
@@ -14,6 +19,7 @@ def show(img, objects=None, texts=None):
     cv2.destroyAllWindows()
 
 
+# Marks the given objects
 def mark_objects(img, objects):
     for i, obj in enumerate(objects):
         label = classes[obj['classId']]
@@ -26,6 +32,7 @@ def mark_objects(img, objects):
                     cv2.FONT_HERSHEY_PLAIN, 3, colors[i], 3)
 
 
+# Marks the given texts
 def mark_texts(img, texts):
     for text in texts:
         bottomRight = (text['topLeft'][0]+text['dimensions']

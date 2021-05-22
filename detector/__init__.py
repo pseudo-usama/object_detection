@@ -11,22 +11,40 @@ from math import ceil
 import cv2
 from config import *
 from DB.schema import *
+
 # Object detection
 from detector.object_detector import detect_objects
 from detector.processing import *
+
 # OCR
 from detector.OCR import detect_text
 from detector.process import find_distances_to_origin
 
+# Debugging
 from detector.show_images import show
 
 
-def detect_objs_and_text(imgName):
-    # Loading Image
-    img = cv2.imread(UPLOADED_IMGS_DIR+imgName)
+def detect_objs(img_name):
+    img = cv2.imread(UPLOADED_IMGS_DIR+img_name)    # Loading Image
 
     objs = detect_objects(img)   # Detecting objects
+    if len(objs) == 0:
+        return None
 
+    objects = calc_objects_attr(objs)
+    toDB = index_for_DB(objects, img_name)
+
+    # Just debugging purposes
+    print(toDB)
+    show(img, objs)
+
+    return toDB
+
+
+def document_detertor(img_name):
+    img = cv2.imread(UPLOADED_IMGS_DIR+img_name)    # Loading image
+
+    objs = detect_objects(img)
     if len(objs) == 0:
         return None
 
@@ -36,13 +54,12 @@ def detect_objs_and_text(imgName):
         find_distances_to_origin(boundingBoxes, objs[0])
 
     objects = calc_objects_attr(objs)
-    toDB = index_for_DB(objects, imgName)
+    toDB = index_for_DB(objects, img_name)
 
     show(img, objs, boundingBoxes)
     print(toDB)
 
     return toDB
-
 
 # Processing the objects
 def calc_objects_attr(extractedObjects):

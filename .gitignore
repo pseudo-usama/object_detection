@@ -4,3 +4,7 @@ asdf
 
 
 yolov3-spp.weights
+
+
+test/*
+!test/.gitkeep

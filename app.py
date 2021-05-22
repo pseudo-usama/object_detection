@@ -1,11 +1,12 @@
 from os import rename as move_file
-from os.path import splitext as splitFileName
-from uuid import uuid1
-from flask import Flask, request, render_template, redirect
+from flask import Flask, render_template, redirect
+
+# Local imports
 from config import *
-from detector import detect_objs_and_text
+from detector import detect_objs
 from DB import insert as insert_toDB
 from DB.search import search as search_inDB
+from validation import validate
 
 
 app = Flask(__name__)
@@ -17,28 +18,30 @@ def index():
 
 
 @app.route('/submit', methods=['POST'])
-def submit():
-    imgName = save_file()
-    objs = detect_objs_and_text(imgName)
+@validate
+def submit(img_name, req_type):
+    objs = detect_objs(img_name)
 
-    if objs is not None:
-        # TODO: If objs is None then the file should be Delete
-        move_file(UPLOADED_IMGS_DIR+imgName, INDEXED_IMGS_DIR+imgName)
-        insert_toDB(objs)
+    if objs is None:
+        # TODO: Image should be Deleted
+        return redirect('/')
+
+    move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
+    insert_toDB(objs)
 
     return redirect('/')
 
 
 @app.route('/search', methods=['POST'])
-def search():
-    imgName = save_file()
-    objs = detect_objs_and_text(imgName)
+@validate
+def search(img_name, img_type):
+    objs = detect_objs(img_name)
 
     if objs is None:
         return render_template('index.html', template='no_img_found')
 
     imgs = search_inDB(objs)
-    move_file(UPLOADED_IMGS_DIR+imgName, INDEXED_IMGS_DIR+imgName)
+    move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
     insert_toDB(objs)
 
     if imgs is None:
@@ -46,14 +49,6 @@ def search():
 
     imgs = [INDEXED_IMGS_DIR+img for img in imgs]
     return render_template('index.html', template='gallary', imgs=imgs)
-
-
-def save_file():
-    img = request.files['img']
-    imgName = str(uuid1())+splitFileName(img.filename)[1]
-    img.save(UPLOADED_IMGS_DIR+imgName)
-
-    return imgName
 
 
 if __name__ == '__main__':
