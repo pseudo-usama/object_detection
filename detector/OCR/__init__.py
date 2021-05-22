@@ -1,21 +1,25 @@
 import pytesseract
 from pytesseract import Output
-import cv2
 from config import *
 
 
 def detect_text(img):
-    d = pytesseract.image_to_data(img, output_type=Output.DICT)
-    n_boxes = len(d['level'])
+    detected_texts = pytesseract.image_to_data(img, output_type=Output.DICT)
 
-    texts = []
+    bounding_boxes = process_texts_data(detected_texts)
+    return bounding_boxes
 
+
+def process_texts_data(texts):
+    bounding_boxes = []
+
+    n_boxes = len(texts['level'])
     for i in range(n_boxes):
-        if OCR_MIN_THRESHOLD <= float(d['conf'][i]) and d['text'][i].strip() != '':
-            texts.append({
-                'topLeft': (d['left'][i], d['top'][i]),
-                'dimensions': (d['width'][i], d['height'][i]),
-                'text': d['text'][i]
+        if OCR_MIN_THRESHOLD <= float(texts['conf'][i]) and texts['text'][i].strip() != '':
+            bounding_boxes.append({
+                'topLeft': (texts['left'][i], texts['top'][i]),
+                'dimensions': (texts['width'][i], texts['height'][i]),
+                'text': texts['text'][i]
             })
 
-    return texts
+    return bounding_boxes

@@ -48,18 +48,19 @@ def document_detertor(img_name):
     if len(objs) == 0:
         return None
 
-    boundingBoxes = None
+    bounding_boxes = None
     if len(objs) == 2:
-        boundingBoxes = detect_text(img)
-        find_distances_to_origin(boundingBoxes, objs[0])
+        bounding_boxes = detect_text(img)
+        find_distances_to_origin(bounding_boxes, objs[0])
 
     objects = calc_objects_attr(objs)
     toDB = index_for_DB(objects, img_name)
 
-    show(img, objs, boundingBoxes)
-    print(toDB)
+    show(img, objs, bounding_boxes)
+    print(toDB, '\n\n\n', bounding_boxes)
 
-    return toDB
+    return toDB, bounding_boxes
+
 
 # Processing the objects
 def calc_objects_attr(extractedObjects):

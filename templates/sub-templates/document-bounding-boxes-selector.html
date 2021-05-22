@@ -1,0 +1,115 @@
+<div id="document-bounding-boxes-selector-template">
+    <p>We detected texts in your image. Now you have to select for each text that whether it's a:</p>
+    <ul>
+        <li>Static bounding box</li>
+        <li>Dynamic bounding box</li>
+        <li>Unique bounding box</li>
+        <li>Or it's neither of all (probably an error)</li>
+    </ul>
+
+    <div id="btns">
+        <input type="button" class="submit-btn" value="Static" onclick="markBoundingBox('static')">
+        <input type="button" class="submit-btn" value="Dynamic" onclick="markBoundingBox('dynamic')">
+        <input type="button" class="submit-btn" value="Unique" onclick="markBoundingBox('unique')">
+        <input type="button" class="submit-btn" value="It's not an text" onclick="markBoundingBox('error')">
+    </div>
+
+    <form id="form" method="POST" action="/document-bounding-boxes-selector">
+        <input type="hidden" name="img-name" value="{{ img_name }}">
+        <input id="form-json-input" name="bounding-boxes-data" type="hidden" value="">
+    </form>
+</div>
+
+<div id="canvas-div">
+    <canvas id="canvas" height="400" width="400"></canvas>
+</div>
+
+<!-- Printing bounding boxes & image path -->
+<{{ 'script' }}>
+    const IMG_PATH = '{{ img_path }}'
+    const BOUNDING_BOXES = {{ bounding_boxes | safe }}
+</{{ 'script' }}>
+
+<script>
+    // Some constants
+    const CANVAS_WIDTH = window.innerWidth * 0.9
+    const CANVAS_HEIGHT = 700
+
+    let imageObj
+    let objectsScaleFactor
+    let objectsLeftOffset
+    let objectsTopOffset
+
+    // Declaring canvas
+    const CANVAS = new fabric.StaticCanvas('canvas', {
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+        width: CANVAS_WIDTH,
+        height: CANVAS_HEIGHT
+    })
+
+    // Adding image to canvas
+    fabric.Image.fromURL(IMG_PATH, function (img) {
+        imageObj = img
+
+        // Calculations to fit image in canvas w.r.t aspect ratio
+        objectsScaleFactor = Math.min(
+            CANVAS_WIDTH / img.width,
+            CANVAS_HEIGHT / img.height
+        )
+        // To center image & bounding boxes
+        objectsLeftOffset = (CANVAS_WIDTH / 2) - (img.width * objectsScaleFactor / 2)
+        objectsTopOffset = (CANVAS_HEIGHT / 2) - (img.height * objectsScaleFactor / 2)
+
+        // Creating the image
+        CANVAS.add(img.set({
+            // opacity: 0.5,
+            left: objectsLeftOffset,
+            top: objectsTopOffset,
+            scaleX: objectsScaleFactor,
+            scaleY: objectsScaleFactor
+        }))
+    })
+
+    // Adding bounding boxes to canvas
+    function markBoundingBox(option) {
+        addBoundingBoxInStr(nthBoundingBox)
+
+        CANVAS.remove(boundingBoxRect)
+        boundingBoxRect = undefined
+
+        nthBoundingBox++
+        if (nthBoundingBox >= BOUNDING_BOXES.length) {
+            document.getElementById('form-json-input').value = boundingBoxesFinalStr
+            document.getElementById('form').submit()
+        }
+
+        showBoundingBoxOnCanvas(nthBoundingBox)
+    }
+
+    function showBoundingBoxOnCanvas(ith) {
+        bb = BOUNDING_BOXES[ith]
+
+        boundingBoxRect = new fabric.Rect({
+            left: objectsLeftOffset + (bb['topLeft'][0] * objectsScaleFactor),
+            top: objectsTopOffset + (bb['topLeft'][1] * objectsScaleFactor),
+            width: bb['dimensions'][0] * objectsScaleFactor,
+            height: bb['dimensions'][1] * objectsScaleFactor,
+
+            fill: 'transparent',
+            stroke: 'red',
+            strokeWidth: 2,
+        })
+        CANVAS.add(boundingBoxRect)
+    }
+    function addBoundingBoxInStr(ith, type) {
+        BOUNDING_BOXES[ith]['bounding_box_type'] = type
+        boundingBoxesFinalStr += JSON.stringify(BOUNDING_BOXES[ith])
+    }
+
+    let boundingBoxRect
+    let boundingBoxesFinalStr = ''
+    let nthBoundingBox = 0
+    setTimeout(() => {
+        showBoundingBoxOnCanvas(nthBoundingBox)
+    }, 1000)
+</script>

@@ -14,6 +14,7 @@
     <script src="{{ url_for('static', filename='scripts/photoswipe.min.js') }}"></script>
     <script src="{{ url_for('static', filename='scripts/photoswipe-ui-default.min.js') }}"></script>
     <script src="{{ url_for('static', filename='scripts/jqPhotoSwipe.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/fabric.min.js') }}"></script>
 </head>
 
 <body>
@@ -24,14 +25,16 @@
     </header>
 
     <section id="inner-body">
-        <form method="POST" enctype="multipart/form-data" name="form">
-            {% include('file-upload.html') %}
+        {% if template != 'document-bounding-boxes-selector' %}
+            <form method="POST" enctype="multipart/form-data" name="form">
+                {% include('file-upload.html') %}
 
-            <div class="form-btns">
-                <input class="submit-btn" type="submit" name="submit" value="Only Submit" onclick="form.action='/submit'">
-                <input class="search-btn" type="submit" name="search" value="Search" onclick="form.action='/search'; form.submit()">
-            </div>
-        </form>
+                <div class="form-btns">
+                    <input class="submit-btn" type="submit" name="submit" value="Only Submit" onclick="form.action='/submit'">
+                    <input class="search-btn" type="submit" name="search" value="Search" onclick="form.action='/search'; form.submit()">
+                </div>
+            </form>
+        {% endif %}
 
         <!-- Including sub template -->
         {% include 'sub-templates/' + template + '.html' %}
