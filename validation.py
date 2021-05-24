@@ -13,14 +13,14 @@ def validate_new_img_req(callback):
     @wraps(callback)
     def validate_and_save_img(*args, **kwargs):
         if 'img' not in request.files:
-            return BAD_REQUEST('Add an image'), HTTP_400_BAD_REQUEST
+            return BAD_REQUEST_STR('Add an image'), HTTP_400_BAD_REQUEST
         elif 'img-type' not in request.form:
-            return BAD_REQUEST('Select some image type'), HTTP_400_BAD_REQUEST
+            return BAD_REQUEST_STR('Select some image type'), HTTP_400_BAD_REQUEST
 
         req_type = request.form['img-type']
         img_file = request.files['img']
         if req_type != 'image' and req_type != 'document':
-            return BAD_REQUEST("Image type can only be 'image' or 'document'"), HTTP_400_BAD_REQUEST
+            return BAD_REQUEST_STR("Image type can only be 'image' or 'document'"), HTTP_400_BAD_REQUEST
 
         img_name = save_file(img_file)
 
@@ -36,13 +36,14 @@ def save_file(img):
 
 
 def validate_bounding_boxes_selector_req(callback):
-    wraps(callback)
-
+    @wraps(callback)
     def validate_bounding_boxes_form(*args, **kwargs):
         if 'img-name' not in request.form:
-            return BAD_REQUEST('Image name not found.')
+            return BAD_REQUEST_STR('Image name not found.')
+        elif 'objects' not in request.form:
+            return BAD_REQUEST_STR('No objects data found.')
         elif 'bounding-boxes-data' not in request.form:
-            return BAD_REQUEST('No bounding boxes data found.')
+            return BAD_REQUEST_STR('No bounding boxes data found.')
 
         img_name = request.form['img-name']
         bounding_boxes_data = request.form['bounding-boxes-data']
@@ -51,5 +52,5 @@ def validate_bounding_boxes_selector_req(callback):
     return validate_bounding_boxes_form
 
 
-def BAD_REQUEST(msj=''):
+def BAD_REQUEST_STR(msj=''):
     return f'<h1>Bad request</h1><p>{msj}</p>'

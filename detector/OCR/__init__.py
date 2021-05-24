@@ -19,7 +19,8 @@ def process_texts_data(texts):
             bounding_boxes.append({
                 'topLeft': (texts['left'][i], texts['top'][i]),
                 'dimensions': (texts['width'][i], texts['height'][i]),
-                'text': texts['text'][i]
+                'text': texts['text'][i],
+                'conf': texts['conf'][i]
             })
 
     return bounding_boxes

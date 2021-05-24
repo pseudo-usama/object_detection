@@ -15,7 +15,8 @@
     </div>
 
     <form id="form" method="POST" action="/document-bounding-boxes-selector">
-        <input type="hidden" name="img-name" value="{{ img_name }}">
+        <input type="hidden" name="img-name" value='{{ img["name"] | safe }}'>
+        <input name="objects" type="hidden" value="{{ objs | replace('"', "'") | safe }}">
         <input id="form-json-input" name="bounding-boxes-data" type="hidden" value="">
     </form>
 </div>
@@ -26,7 +27,7 @@
 
 <!-- Printing bounding boxes & image path -->
 <{{ 'script' }}>
-    const IMG_PATH = '{{ img_path }}'
+    const IMG_PATH = '{{ img['path'] }}{{ img['name'] }}'
     const BOUNDING_BOXES = {{ bounding_boxes | safe }}
 </{{ 'script' }}>
 

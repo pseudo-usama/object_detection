@@ -44,22 +44,22 @@ def detect_objs(img_name):
 def document_detertor(img_name):
     img = cv2.imread(UPLOADED_IMGS_DIR+img_name)    # Loading image
 
-    objs = detect_objects(img)
-    if len(objs) == 0:
+    detected_objs = detect_objects(img)
+    if len(detected_objs) == 0:
         return None
 
     bounding_boxes = None
-    if len(objs) == 2:
+    if len(detected_objs) == 2:
         bounding_boxes = detect_text(img)
-        find_distances_to_origin(bounding_boxes, objs[0])
+        find_distances_to_origin(bounding_boxes, detected_objs[0])
 
-    objects = calc_objects_attr(objs)
-    toDB = index_for_DB(objects, img_name)
+    processed_objs = calc_objects_attr(detected_objs)
+    indexed_objs = index_for_DB(processed_objs, img_name)
 
-    show(img, objs, bounding_boxes)
-    print(toDB, '\n\n\n', bounding_boxes)
+    show(img, detected_objs, bounding_boxes)
+    print(processed_objs, '\n\n\n', bounding_boxes)
 
-    return toDB, bounding_boxes
+    return processed_objs, bounding_boxes
 
 
 # Processing the objects

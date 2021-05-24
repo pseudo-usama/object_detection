@@ -37,7 +37,7 @@ def process_objects(objects, width, height):
     for obj in objects:
         for detection in obj:
             scores = detection[5:]
-            classId = np.argmax(scores)
+            classId = np.argmax(scores).item()
             confidence = scores[classId]
 
             if confidence > 0.5:
