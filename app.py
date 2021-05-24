@@ -80,8 +80,9 @@ def document_search(img_name):
 # This route used only after submitting of document
 @app.route('/document-bounding-boxes-selector', methods=['POST'])
 @validate_bounding_boxes_selector_form
-def save_template(img_name, bounding_boxes_data):
+def save_template(img_name, objs_data, bounding_boxes_data):
     print(img_name)
+    print(objs_data)
     print(bounding_boxes_data)
 
     return redirect('/')

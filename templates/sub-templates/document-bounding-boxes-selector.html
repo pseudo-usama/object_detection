@@ -16,7 +16,7 @@
 
     <form id="form" method="POST" action="/document-bounding-boxes-selector">
         <input type="hidden" name="img-name" value='{{ img["name"] | safe }}'>
-        <input name="objects" type="hidden" value="{{ objs | replace('"', "'") | safe }}">
+        <input type="hidden" name="objects-data" value="{{ objs | replace('"', "'") | safe }}">
         <input id="form-json-input" name="bounding-boxes-data" type="hidden" value="">
     </form>
 </div>

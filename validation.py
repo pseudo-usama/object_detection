@@ -34,15 +34,16 @@ def validate_bounding_boxes_selector_form(callback):
     def validate_bounding_boxes_form(*args, **kwargs):
         if 'img-name' not in request.form:
             return BAD_REQUEST_STR('Image name not found.')
-        elif 'objects' not in request.form:
+        elif 'objects-data' not in request.form:
             return BAD_REQUEST_STR('No objects data found.')
         elif 'bounding-boxes-data' not in request.form:
             return BAD_REQUEST_STR('No bounding boxes data found.')
 
         img_name = request.form['img-name']
         bounding_boxes_data = request.form['bounding-boxes-data']
+        objs_data = request.form['objects-data']
 
-        return callback(img_name, bounding_boxes_data, *args, **kwargs)
+        return callback(img_name, objs_data, bounding_boxes_data, *args, **kwargs)
     return validate_bounding_boxes_form
 
 
