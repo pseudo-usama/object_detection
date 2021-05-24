@@ -7,7 +7,7 @@ from config import *
 from detector import detect_objs, document_detertor
 from DB import insert as insert_toDB
 from DB.search import search as search_inDB
-from validation import validate_form, validate_bounding_boxes_selector_req
+from validation import validate_submit_search_form, validate_bounding_boxes_selector_form
 
 
 app = Flask(__name__)
@@ -21,7 +21,7 @@ def index():
 
 # When user only submits a image
 @app.route('/submit-image', methods=['POST'])
-@validate_form
+@validate_submit_search_form
 def img_submit(img_name):
     objs = detect_objs(img_name)
 
@@ -37,7 +37,7 @@ def img_submit(img_name):
 
 # Document user only submit a document
 @app.route('/submit-document', methods=['POST'])
-@validate_form
+@validate_submit_search_form
 def document_submit(img_name):
     objs, bbs = document_detertor(img_name)
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
@@ -53,7 +53,7 @@ def document_submit(img_name):
 
 # When user search for image
 @app.route('/search-image', methods=['POST'])
-@validate_form
+@validate_submit_search_form
 def search(img_name):
     objs = detect_objs(img_name)
 
@@ -72,7 +72,7 @@ def search(img_name):
 
 
 @app.route('/search-document', methods=['POST'])
-@validate_form
+@validate_submit_search_form
 def document_search():
     return 'asdf'
 
@@ -80,7 +80,7 @@ def document_search():
 # When user enter document template
 # This route used only after submitting of document
 @app.route('/document-bounding-boxes-selector', methods=['POST'])
-@validate_bounding_boxes_selector_req
+@validate_bounding_boxes_selector_form
 def save_template(img_name, bounding_boxes_data):
     print(img_name)
     print(bounding_boxes_data)

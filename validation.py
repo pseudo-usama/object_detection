@@ -9,7 +9,7 @@ from uuid import uuid1
 from config import *
 
 
-def validate_form(callback):
+def validate_submit_search_form(callback):
     @wraps(callback)
     def validate(*args, **kwargs):
         if 'img' not in request.files:
@@ -29,7 +29,7 @@ def save_file(img):
     return img_name
 
 
-def validate_bounding_boxes_selector_req(callback):
+def validate_bounding_boxes_selector_form(callback):
     @wraps(callback)
     def validate_bounding_boxes_form(*args, **kwargs):
         if 'img-name' not in request.form:
