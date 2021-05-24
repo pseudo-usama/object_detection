@@ -4,7 +4,7 @@ import json
 
 # Local imports
 from config import *
-from detector import detect_objs, document_detertor
+from detector import detect_objs, document_detertor, index_document
 from DB import insert as insert_toDB
 from DB.search import search as search_inDB
 from validation import validate_submit_search_form, validate_bounding_boxes_selector_form
@@ -76,14 +76,13 @@ def document_search(img_name):
     return 'asdf'
 
 
-# When user enter document template
-# This route used only after submitting of document
+# When user submit document template
+# Then server send the bounding boxes to client to select types of bounding boxes
+# This route used only when user submits types of bounding boxes
 @app.route('/document-bounding-boxes-selector', methods=['POST'])
 @validate_bounding_boxes_selector_form
-def save_template(img_name, objs_data, bounding_boxes_data):
-    print(img_name)
-    print(objs_data)
-    print(bounding_boxes_data)
+def save_template(img_name, objs, bounding_boxes):
+    index_document(img_name, objs, bounding_boxes)
 
     return redirect('/')
 

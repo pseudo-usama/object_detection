@@ -42,11 +42,11 @@ def validate_bounding_boxes_selector_form(callback):
 
         img_name = request.form['img-name']
 
-        bounding_boxes_data_str = request.form['bounding-boxes-data'].replace("'", "\'")
-        bounding_boxes_data = json.loads(bounding_boxes_data_str)
-
         objs_data_str = request.form['objects-data'].replace("'", "\'")
         objs_data = json.loads(objs_data_str)
+
+        bounding_boxes_data_str = request.form['bounding-boxes-data'].replace("'", "\'")
+        bounding_boxes_data = json.loads(bounding_boxes_data_str)
 
         return callback(img_name, objs_data, bounding_boxes_data, *args, **kwargs)
     return validate_bounding_boxes_form

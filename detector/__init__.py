@@ -9,6 +9,7 @@ You can view that database structure at DB/structure.json
 
 from math import ceil
 import cv2
+from numpy import printoptions
 from config import *
 from DB.schema import *
 
@@ -39,27 +40,6 @@ def detect_objs(img_name):
     show(img, objs)
 
     return toDB
-
-
-def document_detertor(img_name):
-    img = cv2.imread(UPLOADED_IMGS_DIR+img_name)    # Loading image
-
-    detected_objs = detect_objects(img)
-    if len(detected_objs) == 0:
-        return None
-
-    bounding_boxes = None
-    if len(detected_objs) == 2:
-        bounding_boxes = detect_text(img)
-        find_distances_to_origin(bounding_boxes, detected_objs[0])
-
-    processed_objs = calc_objects_attr(detected_objs)
-    indexed_objs = index_for_DB(processed_objs, img_name)
-
-    show(img, detected_objs, bounding_boxes)
-    print(processed_objs, '\n\n\n', bounding_boxes)
-
-    return processed_objs, bounding_boxes
 
 
 # Processing the objects
@@ -93,6 +73,78 @@ def index_for_DB(objects, imgName):
         data[f'{i+1}.{nthAreaRatioObj}.{nthDistanceobj}.{nthAngleObj}'] = imgName
 
     return data
+
+
+# 
+# Document detector
+# 
+def document_detertor(img_name):
+    img = cv2.imread(UPLOADED_IMGS_DIR+img_name)    # Loading image
+
+    detected_objs = detect_objects(img)
+    if len(detected_objs) == 0:
+        return None
+
+    bounding_boxes = None
+    if len(detected_objs) == 2:
+        bounding_boxes = detect_text(img)
+        find_distances_to_origin(bounding_boxes, detected_objs[0])
+
+    processed_objs = calc_objects_attr(detected_objs)
+    indexed_objs = index_for_DB(processed_objs, img_name)
+
+    # show(img, detected_objs, bounding_boxes)
+    print(processed_objs, '\n\n\n', bounding_boxes)
+
+    return processed_objs, bounding_boxes
+
+
+def index_document(img_name, objs, bounding_boxes):
+    sbb = []
+    dbb = []
+    ubb = []
+
+    # Arranging bounding boxes according to their category
+    for bb in bounding_boxes:
+        if bb['bounding_box_type'] == 'static':
+            sbb.append(bb)
+        elif bb['bounding_box_type'] == 'dynamic':
+            dbb.append(bb)
+        elif bb['bounding_box_type'] == 'unique':
+            ubb.append(bb)
+        else:   # Not a text
+            pass
+
+        del bb['bounding_box_type']
+
+    arranged_bounding_boxes = {
+        'sbb': sbb,
+        'dbb': dbb,
+        'ubb': ubb,
+        'imgName': img_name
+    }
+
+    data = index_bounding_boxes(objs, arranged_bounding_boxes, len(bounding_boxes))
+    print(data)
+
+
+def index_bounding_boxes(objs, dataToSave, no_of_bounding_boxes):
+    data = {}
+
+    for i, obj in enumerate(objs):
+        if i == 0:
+            continue
+
+        nthAngleObj = str(ceil(obj['angle']/ANGLE_RANGE))
+        nthAreaRatioObj = str(ceil(obj['areaRatio']/AREA_RATIO_RANGE))
+
+        data[nthAngleObj] = {
+            nthAreaRatioObj: {
+                str(no_of_bounding_boxes): dataToSave
+            }
+        }
+
+        return data
 
 
 if __name__ == "__main__":

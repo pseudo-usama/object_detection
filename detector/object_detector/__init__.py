@@ -40,6 +40,7 @@ def process_objects(objects, width, height):
             classId = np.argmax(scores).item()
             confidence = scores[classId]
 
+            # TODO: have to add here constent value for confidence
             if confidence > 0.5:
                 centerX = int(detection[0]*width)
                 centerY = int(detection[1]*height)
