@@ -62,13 +62,13 @@ def index_for_DB(objects, imgName):
             data['1'] = imgName
             continue
 
-        nthAreaRatioObj = ceil(obj['areaRatio']/AREA_RATIO_RANGE)
-        nthAngleObj = ceil(obj['angle']/ANGLE_RANGE)
+        nthAreaRatioObj = ceil(obj['areaRatio']/OBJ_AREA_RATIO_RANGE)
+        nthAngleObj = ceil(obj['angle']/OBJ_ANGLE_RANGE)
         if i == 1:
             data[f'2.{nthAreaRatioObj}.{nthAngleObj}'] = imgName
             continue
 
-        nthDistanceobj = ceil(obj['distanceRatio']/DISTANCE_RATIO_RANGE)
+        nthDistanceobj = ceil(obj['distanceRatio']/OBJ_DISTANCE_RATIO_RANGE)
 
         data[f'{i+1}.{nthAreaRatioObj}.{nthDistanceobj}.{nthAngleObj}'] = imgName
 
@@ -124,23 +124,23 @@ def index_document(img_name, objs, bounding_boxes):
         'imgName': img_name
     }
 
-    data = index_bounding_boxes(objs, arranged_bounding_boxes, len(bounding_boxes))
-    print(data)
+    indexed_data = index_bounding_boxes(objs, arranged_bounding_boxes, len(bounding_boxes))
+    return indexed_data
 
 
-def index_bounding_boxes(objs, dataToSave, no_of_bounding_boxes):
+def index_bounding_boxes(objs, data_to_save, no_of_bounding_boxes):
     data = {}
 
     for i, obj in enumerate(objs):
         if i == 0:
             continue
 
-        nthAngleObj = str(ceil(obj['angle']/ANGLE_RANGE))
-        nthAreaRatioObj = str(ceil(obj['areaRatio']/AREA_RATIO_RANGE))
+        nth_angle_obj = str(ceil(obj['angle']/DOC_ANGLE_RANGE))
+        nth_area_ratio_obj = str(ceil(obj['areaRatio']/DOC_AREA_RATIO_RANGE))
 
-        data[nthAngleObj] = {
-            nthAreaRatioObj: {
-                str(no_of_bounding_boxes): dataToSave
+        data[nth_angle_obj] = {
+            nth_area_ratio_obj: {
+                str(no_of_bounding_boxes): data_to_save
             }
         }
 

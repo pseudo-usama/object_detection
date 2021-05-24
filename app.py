@@ -82,7 +82,8 @@ def document_search(img_name):
 @app.route('/document-bounding-boxes-selector', methods=['POST'])
 @validate_bounding_boxes_selector_form
 def save_template(img_name, objs, bounding_boxes):
-    index_document(img_name, objs, bounding_boxes)
+    toDB = index_document(img_name, objs, bounding_boxes)
+    print(toDB)
 
     return redirect('/')
 
