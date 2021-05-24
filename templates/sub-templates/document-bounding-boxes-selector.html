@@ -73,7 +73,7 @@
 
     // Adding bounding boxes to canvas
     function markBoundingBox(option) {
-        addBoundingBoxInStr(nthBoundingBox)
+        addBoundingBoxInArr(nthBoundingBox, option)
 
         CANVAS.remove(boundingBoxRect)
         boundingBoxRect = undefined
@@ -83,6 +83,7 @@
             finalBoundingBoxesArr = `[${finalBoundingBoxesArr.toString()}]`
             document.getElementById('form-json-input').value = finalBoundingBoxesArr
             document.getElementById('form').submit()
+            return
         }
 
         showBoundingBoxOnCanvas(nthBoundingBox)
@@ -103,7 +104,7 @@
         })
         CANVAS.add(boundingBoxRect)
     }
-    function addBoundingBoxInStr(ith, type) {
+    function addBoundingBoxInArr(ith, type) {
         BOUNDING_BOXES[ith]['bounding_box_type'] = type
         finalBoundingBoxesArr.push(JSON.stringify(BOUNDING_BOXES[ith]))
     }
