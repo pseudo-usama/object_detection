@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Index page
 @app.route('/')
 def index():
-    return render_template('index.html', template='default')
+    return send_respose('default')
 
 
 # When user only submits a image
@@ -42,8 +42,7 @@ def document_submit(img_name):
     objs, bbs = document_detertor(img_name)
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
 
-    return render_template(
-        'index.html',
+    return send_respose(
         template='document-bounding-boxes-selector',
         img={ 'name': img_name, 'path': INDEXED_IMGS_DIR },
         bounding_boxes=json.dumps(bbs),
@@ -58,22 +57,22 @@ def search(img_name):
     objs = detect_objs(img_name)
 
     if objs is None:
-        return render_template('index.html', template='no_img_found')
+        return send_respose('no_img_found')
 
     imgs = search_inDB(objs)
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
     insert_toDB(objs)
 
     if imgs is None:
-        return render_template('index.html', template='no_img_found')
+        return send_respose('no_img_found')
 
     imgs = [INDEXED_IMGS_DIR+img for img in imgs]
-    return render_template('index.html', template='gallary', imgs=imgs)
+    return send_respose('gallary', imgs=imgs)
 
 
 @app.route('/search-document', methods=['POST'])
 @validate_submit_search_form
-def document_search():
+def document_search(img_name):
     return 'asdf'
 
 
@@ -86,6 +85,10 @@ def save_template(img_name, bounding_boxes_data):
     print(bounding_boxes_data)
 
     return redirect('/')
+
+
+def send_respose(template, *args, **kwargs):
+    return render_template('index.html', template=template, *args, **kwargs)
 
 
 if __name__ == '__main__':
