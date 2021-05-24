@@ -4,6 +4,7 @@ from subprocess import call
 from flask import request
 from flask_api.status import HTTP_400_BAD_REQUEST
 from uuid import uuid1
+import json
 
 # Local imports
 from config import *
@@ -40,8 +41,12 @@ def validate_bounding_boxes_selector_form(callback):
             return BAD_REQUEST_STR('No bounding boxes data found.')
 
         img_name = request.form['img-name']
-        bounding_boxes_data = request.form['bounding-boxes-data']
-        objs_data = request.form['objects-data']
+
+        bounding_boxes_data_str = request.form['bounding-boxes-data'].replace("'", "\'")
+        bounding_boxes_data = json.loads(bounding_boxes_data_str)
+
+        objs_data_str = request.form['objects-data'].replace("'", "\'")
+        objs_data = json.loads(objs_data_str)
 
         return callback(img_name, objs_data, bounding_boxes_data, *args, **kwargs)
     return validate_bounding_boxes_form

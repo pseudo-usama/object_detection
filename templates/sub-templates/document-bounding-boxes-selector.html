@@ -16,7 +16,7 @@
 
     <form id="form" method="POST" action="/document-bounding-boxes-selector">
         <input type="hidden" name="img-name" value='{{ img["name"] | safe }}'>
-        <input type="hidden" name="objects-data" value="{{ objs | replace('"', "'") | safe }}">
+        <input id="form-objs-input" type="hidden" name="objects-data" value="{{ objs }}">
         <input id="form-json-input" name="bounding-boxes-data" type="hidden" value="">
     </form>
 </div>
@@ -27,7 +27,7 @@
 
 <!-- Printing bounding boxes & image path -->
 <{{ 'script' }}>
-    const IMG_PATH = '{{ img['path'] }}{{ img['name'] }}'
+    const IMG_PATH = '{{ img['path'] }}/{{ img['name'] }}'
     const BOUNDING_BOXES = {{ bounding_boxes | safe }}
 </{{ 'script' }}>
 
@@ -80,7 +80,8 @@
 
         nthBoundingBox++
         if (nthBoundingBox >= BOUNDING_BOXES.length) {
-            document.getElementById('form-json-input').value = boundingBoxesFinalStr
+            finalBoundingBoxesArr = `[${finalBoundingBoxesArr.toString()}]`
+            document.getElementById('form-json-input').value = finalBoundingBoxesArr
             document.getElementById('form').submit()
         }
 
@@ -104,11 +105,11 @@
     }
     function addBoundingBoxInStr(ith, type) {
         BOUNDING_BOXES[ith]['bounding_box_type'] = type
-        boundingBoxesFinalStr += JSON.stringify(BOUNDING_BOXES[ith])
+        finalBoundingBoxesArr.push(JSON.stringify(BOUNDING_BOXES[ith]))
     }
 
     let boundingBoxRect
-    let boundingBoxesFinalStr = ''
+    let finalBoundingBoxesArr = []
     let nthBoundingBox = 0
     setTimeout(() => {
         showBoundingBoxOnCanvas(nthBoundingBox)
