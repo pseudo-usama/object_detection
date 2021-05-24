@@ -9,23 +9,17 @@ from uuid import uuid1
 from config import *
 
 
-def validate_new_img_req(callback):
+def validate_form(callback):
     @wraps(callback)
-    def validate_and_save_img(*args, **kwargs):
+    def validate(*args, **kwargs):
         if 'img' not in request.files:
             return BAD_REQUEST_STR('Add an image'), HTTP_400_BAD_REQUEST
-        elif 'img-type' not in request.form:
-            return BAD_REQUEST_STR('Select some image type'), HTTP_400_BAD_REQUEST
 
-        req_type = request.form['img-type']
         img_file = request.files['img']
-        if req_type != 'image' and req_type != 'document':
-            return BAD_REQUEST_STR("Image type can only be 'image' or 'document'"), HTTP_400_BAD_REQUEST
-
         img_name = save_file(img_file)
 
-        return callback(img_name, req_type, *args, **kwargs)
-    return validate_and_save_img
+        return callback(img_name, *args, **kwargs)
+    return validate
 
 
 def save_file(img):

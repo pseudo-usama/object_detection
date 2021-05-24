@@ -7,7 +7,7 @@ from config import *
 from detector import detect_objs, document_detertor
 from DB import insert as insert_toDB
 from DB.search import search as search_inDB
-from validation import validate_new_img_req, validate_bounding_boxes_selector_req
+from validation import validate_form, validate_bounding_boxes_selector_req
 
 
 app = Flask(__name__)
@@ -19,26 +19,29 @@ def index():
     return render_template('index.html', template='default')
 
 
-# When user only submits a image/document
-@app.route('/submit', methods=['POST'])
-@validate_new_img_req
-def submit(img_name, req_type):
-    if req_type == 'image':
-        objs = detect_objs(img_name)
+# When user only submits a image
+@app.route('/submit-image', methods=['POST'])
+@validate_form
+def img_submit(img_name):
+    objs = detect_objs(img_name)
 
-        if objs is None:
-            # TODO: Image should be Deleted
-            return redirect('/')
-
-        move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
-        insert_toDB(objs)
-
+    if objs is None:
+        # TODO: Image should be Deleted
         return redirect('/')
 
-    # Image type document
+    move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
+    insert_toDB(objs)
+
+    return redirect('/')
+
+
+# Document user only submit a document
+@app.route('/submit-document', methods=['POST'])
+@validate_form
+def document_submit(img_name):
     objs, bbs = document_detertor(img_name)
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
-    print(type(objs), type(bbs))
+
     return render_template(
         'index.html',
         template='document-bounding-boxes-selector',
@@ -48,10 +51,10 @@ def submit(img_name, req_type):
     )
 
 
-# When user search for image/document
-@app.route('/search', methods=['POST'])
-@validate_new_img_req
-def search(img_name, img_type):
+# When user search for image
+@app.route('/search-image', methods=['POST'])
+@validate_form
+def search(img_name):
     objs = detect_objs(img_name)
 
     if objs is None:
@@ -66,6 +69,12 @@ def search(img_name, img_type):
 
     imgs = [INDEXED_IMGS_DIR+img for img in imgs]
     return render_template('index.html', template='gallary', imgs=imgs)
+
+
+@app.route('/search-document', methods=['POST'])
+@validate_form
+def document_search():
+    return 'asdf'
 
 
 # When user enter document template

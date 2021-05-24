@@ -26,14 +26,29 @@
 
     <section id="inner-body">
         {% if template != 'document-bounding-boxes-selector' %}
-            <form method="POST" enctype="multipart/form-data" name="form">
+            <form id="img-upload-form" method="POST" enctype="multipart/form-data" name="form">
                 {% include('file-upload.html') %}
 
                 <div class="form-btns">
-                    <input class="submit-btn" type="submit" name="submit" value="Only Submit" onclick="form.action='/submit'">
-                    <input class="search-btn" type="submit" name="search" value="Search" onclick="form.action='/search'; form.submit()">
+                    <input id="submit-btn" class="submit-btn" type="submit" value="Only Submit" onclick="changeFormAction(this)">
+                    <input id="search-btn" class="search-btn" type="submit" value="Search" onclick="changeFormAction(this)">
                 </div>
             </form>
+
+            <script>
+                const IMG_UPLOAD_FORM = document.getElementById('img-upload-form')
+                const SUBMIT_BTN = document.getElementById('submit-btn')
+                const SEARCH_BTN = document.getElementById('search-btn')
+
+                function changeFormAction(btn) {
+                    if (btn === SUBMIT_BTN) {
+                        IMG_UPLOAD_FORM.action = IMG_RADIO_BTN.checked ? '/submit-image' : '/submit-document'
+                    }
+                    else {
+                        IMG_UPLOAD_FORM.action = IMG_RADIO_BTN.checked ? '/search-image' : '/search-document'
+                    }
+                }
+            </script>
         {% endif %}
 
         <!-- Including sub template -->
