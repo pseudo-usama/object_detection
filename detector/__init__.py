@@ -118,10 +118,10 @@ def index_document(img_name, objs, bounding_boxes):
         del bb['bounding_box_type']
 
     arranged_bounding_boxes = {
+        'imgName': img_name,
         'sbb': sbb,
         'dbb': dbb,
-        'ubb': ubb,
-        'imgName': img_name
+        'ubb': ubb
     }
 
     indexed_data = index_bounding_boxes(objs, arranged_bounding_boxes, len(bounding_boxes))

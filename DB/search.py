@@ -1,9 +1,9 @@
-from DB import read
+from DB import read_objs_data
 
 
-def search(objs):
+def search_objs(objs):
     query = {key: True for key in objs}
-    matches = read(query)
+    matches = read_objs_data(query)
     if matches is None:
         return None
 
@@ -16,6 +16,10 @@ def search(objs):
 
     withoutDuplicats = list(dict.fromkeys(imgs))
     return withoutDuplicats
+
+
+def search_documents():
+    pass
 
 
 def flatten(mydict):

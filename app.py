@@ -5,8 +5,8 @@ import json
 # Local imports
 from config import *
 from detector import detect_objs, document_detertor, index_document
-from DB import insert as insert_toDB
-from DB.search import search as search_inDB
+from DB import insert_graphical_img_data, insert_document_data
+from DB.search import search_objs as search_objs_in_db, search_documents as search_documents_in_db
 from validation import validate_submit_search_form, validate_bounding_boxes_selector_form
 
 
@@ -30,7 +30,7 @@ def img_submit(img_name):
         return redirect('/')
 
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
-    insert_toDB(objs)
+    insert_graphical_img_data(objs)
 
     return redirect('/')
 
@@ -59,9 +59,9 @@ def search(img_name):
     if objs is None:
         return send_respose('no_img_found')
 
-    imgs = search_inDB(objs)
+    imgs = search_objs_in_db(objs)
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
-    insert_toDB(objs)
+    insert_graphical_img_data(objs)
 
     if imgs is None:
         return send_respose('no_img_found')
@@ -83,7 +83,7 @@ def document_search(img_name):
 @validate_bounding_boxes_selector_form
 def save_template(img_name, objs, bounding_boxes):
     toDB = index_document(img_name, objs, bounding_boxes)
-    print(toDB)
+    insert_document_data(toDB)
 
     return redirect('/')
 
