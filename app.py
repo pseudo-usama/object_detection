@@ -53,7 +53,7 @@ def document_submit(img_name):
 # When user search for image
 @app.route('/search-image', methods=['POST'])
 @validate_submit_search_form
-def search(img_name):
+def img_search(img_name):
     objs = detect_objs(img_name)
 
     if objs is None:

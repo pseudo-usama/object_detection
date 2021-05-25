@@ -1,4 +1,4 @@
-from DB import read_objs_data
+from DB import read_objs_data, read_documents_data
 
 
 def search_objs(objs):
