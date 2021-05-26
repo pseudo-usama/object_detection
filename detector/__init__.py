@@ -8,6 +8,7 @@ You can view that database structure at DB/structure.json
 
 
 from math import ceil
+from typing import Tuple
 import cv2
 from numpy import printoptions
 from config import *
@@ -25,21 +26,22 @@ from detector.process import find_distances_to_origin
 from detector.show_images import show
 
 
-def detect_objs(img_name):
+def detect_objs(img_name, add_deviation=False):
     img = cv2.imread(UPLOADED_IMGS_DIR+img_name)    # Loading Image
 
     objs = detect_objects(img)   # Detecting objects
+
+    show(img, objs) # Just debugging purposes
+
     if len(objs) == 0:
         return None
 
     objects = calc_objects_attr(objs)
-    toDB = index_for_DB(objects, img_name)
+    data_to_return = index_for_DB(objects, img_name, add_deviation=add_deviation)   # Contains data for DB, and maybe data for search
 
-    # Just debugging purposes
-    # print(toDB)
-    # show(img, objs)
+    print(data_to_return[0] if isinstance(data_to_return, tuple) else data_to_return)     # Just for dubbuging
 
-    return toDB
+    return data_to_return
 
 
 # Processing the objects
@@ -55,8 +57,9 @@ def calc_objects_attr(extractedObjects):
 
 
 # Index the data according to database schema
-def index_for_DB(objects, imgName):
+def index_for_DB(objects, imgName, add_deviation=False):
     data = {}
+    data_for_search = {}
     for i, obj in enumerate(objects):
         if i == 0:
             data['1'] = imgName
@@ -66,11 +69,25 @@ def index_for_DB(objects, imgName):
         nthAngleObj = ceil(obj['angle']/OBJ_ANGLE_RANGE)
         if i == 1:
             data[f'2.{nthAreaRatioObj}.{nthAngleObj}'] = imgName
+            data_for_search[f'2.{nthAreaRatioObj}.{nthAngleObj}'] = imgName
+            if add_deviation:
+                for nAreaObj in range(abs(OBJ_AREA_DEVIATION-nthAreaRatioObj), abs(OBJ_AREA_DEVIATION+nthAreaRatioObj+1)):
+                    for nAngleObj in range(abs(OBJ_ANGLE_DEVIATION-nthAngleObj), abs(OBJ_ANGLE_DEVIATION+nthAngleObj+1)):
+                        data_for_search[f'2.{nAreaObj}.{nAngleObj}'] = imgName
             continue
 
         nthDistanceobj = ceil(obj['distanceRatio']/OBJ_DISTANCE_RATIO_RANGE)
 
         data[f'{i+1}.{nthAreaRatioObj}.{nthDistanceobj}.{nthAngleObj}'] = imgName
+        data_for_search[f'{i+1}.{nthAreaRatioObj}.{nthDistanceobj}.{nthAngleObj}'] = imgName
+        if add_deviation:
+            for nAreaObj in range(abs(OBJ_AREA_DEVIATION-nthAreaRatioObj), abs(OBJ_AREA_DEVIATION+nthAreaRatioObj+1)):
+                for nDistObj in range(abs(OBJ_DISTANCE_DEVIATION-nthDistanceobj), abs(OBJ_DISTANCE_DEVIATION+nthDistanceobj+1)):
+                    for nAngleObj in range(abs(OBJ_ANGLE_DEVIATION-nthAngleObj), abs(OBJ_ANGLE_DEVIATION+nthAngleObj+1)):
+                        data_for_search[f'2.{nAreaObj}.{nDistObj}.{nAngleObj}'] = imgName
+
+    if add_deviation:
+        return data, data_for_search
 
     return data
 
@@ -91,11 +108,11 @@ def document_detertor(img_name):
         find_distances_to_origin(bounding_boxes, detected_objs[0])
 
     processed_objs = calc_objects_attr(detected_objs)
-    indexed_objs = index_for_DB(processed_objs, img_name)
+    # indexed_objs = index_for_DB(processed_objs, img_name) # TODO: I've changed the index_for_DB() parameters.
 
     # Just for debugging
     # print(processed_objs, '\n\n\n', bounding_boxes)
-    # show(img, detected_objs, bounding_boxes)
+    show(img, detected_objs, bounding_boxes)
 
     return processed_objs, bounding_boxes
 

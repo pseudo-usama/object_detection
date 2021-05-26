@@ -10,7 +10,7 @@ def search_objs(objs):
     if matches is None:
         return None
 
-    del matches['1']
+    matches.pop('1', None)
 
     imgs = flatten(matches)
     if imgs == []:

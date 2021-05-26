@@ -17,12 +17,16 @@ def insert_document_data(data):
 
 def read_objs_data(query):
     document = object_collection.find_one({'_id': 1}, query)
-    del document['_id']
-    
+    if document is None:
+        return None
+
+    document.pop('_id', None)
     return document
 
 def read_documents_data(query):
     document = document_collection.find_one({ '_id': 1 }, query)
-    del document['_id']
+    if document is None:
+        return None
 
+    document.pop('_id', None)
     return document
