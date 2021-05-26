@@ -13,7 +13,12 @@ def show(img, objects=None, texts=None):
     if texts is not None:
         mark_texts(img, texts)
 
-    img = cv2.resize(img, None, fx=0.5, fy=0.5)
+    scale_factor = min(
+        1000 / img.shape[0],
+        1000 / img.shape[1]
+    )
+
+    img = cv2.resize(img, None, fx=scale_factor, fy=scale_factor)
     cv2.imshow('Image', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
@@ -27,7 +32,7 @@ def mark_objects(img, objects):
         bottomRight = (obj['topLeft'][0]+obj['dimentions'][0],
                        obj['topLeft'][1]+obj['dimentions'][1])
         topLeft = obj['topLeft']
-        cv2.rectangle(img, topLeft, bottomRight, colors[i], 2)
+        cv2.rectangle(img, topLeft, bottomRight, colors[i], 2, 500)
         cv2.putText(img, label, topLeft,
                     cv2.FONT_HERSHEY_PLAIN, 3, colors[i], 3)
 
