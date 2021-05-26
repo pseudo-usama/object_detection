@@ -7,8 +7,8 @@ You can view that database structure at DB/structure.json
 """
 
 
+import copy
 from math import ceil
-from typing import Tuple
 import cv2
 from numpy import printoptions
 from config import *
@@ -40,6 +40,7 @@ def detect_objs(img_name, add_deviation=False):
     data_to_return = index_for_DB(objects, img_name, add_deviation=add_deviation)   # Contains data for DB, and maybe data for search
 
     print(data_to_return[0] if isinstance(data_to_return, tuple) else data_to_return)     # Just for dubbuging
+    # print(data_to_return[1])     # Just for dubbuging
 
     return data_to_return
 
@@ -87,7 +88,15 @@ def index_for_DB(objects, imgName, add_deviation=False):
                         data_for_search[f'2.{nAreaObj}.{nDistObj}.{nAngleObj}'] = imgName
 
     if add_deviation:
-        return data, data_for_search
+        # Removing duplicates
+        new_data_for_search = copy.deepcopy(data_for_search)
+
+        for key in data_for_search.keys():
+            dubs = [k for k in data_for_search.keys() if key in k]
+            if len(dubs) > 2:
+                del new_data_for_search[key]
+        
+        return data, new_data_for_search
 
     return data
 
