@@ -4,7 +4,7 @@ import json
 
 # Local imports
 from config import *
-from detector import detect_objs, document_detertor, index_document
+from detector import detect_objs, document_detertor, index_document_data, index_bounding_boxes
 from DB import insert_graphical_img_data, insert_document_data
 from DB.search import search_objs as search_objs_in_db, search_documents as search_documents_in_db
 from validation import validate_submit_search_form, validate_bounding_boxes_selector_form
@@ -57,6 +57,7 @@ def img_search(img_name):
     objs = detect_objs(img_name)
 
     if objs is None:
+        # TODO: The image should be deleted
         return send_respose('no_img_found')
 
     imgs = search_objs_in_db(objs)
@@ -73,7 +74,21 @@ def img_search(img_name):
 @app.route('/search-document', methods=['POST'])
 @validate_submit_search_form
 def document_search(img_name):
-    return 'asdf'
+    objs, bbs = document_detertor(img_name)
+
+    if bbs is None:
+        # TODO: Case for 0 or 1 objs
+        # TODO: The image should be deleted
+        return send_respose('no_img_found')
+
+    indexed = index_bounding_boxes(objs, True, len(bbs))
+    imgs = search_documents_in_db(indexed)
+
+    if imgs is None:
+        return send_respose('no_img_found')
+
+    imgs = [INDEXED_IMGS_DIR+img for img in imgs]
+    return send_respose('gallary', imgs=imgs)
 
 
 # When user submit document template
@@ -82,9 +97,8 @@ def document_search(img_name):
 @app.route('/document-bounding-boxes-selector', methods=['POST'])
 @validate_bounding_boxes_selector_form
 def save_template(img_name, objs, bounding_boxes):
-    toDB = index_document(img_name, objs, bounding_boxes)
+    toDB = index_document_data(img_name, objs, bounding_boxes)
     insert_document_data(toDB)
-
     return redirect('/')
 
 

@@ -17,7 +17,12 @@ def insert_document_data(data):
 
 def read_objs_data(query):
     document = object_collection.find_one({'_id': 1}, query)
+    del document['_id']
+    
     return document
 
 def read_documents_data(query):
-    pass
+    document = document_collection.find_one({ '_id': 1 }, query)
+    del document['_id']
+
+    return document

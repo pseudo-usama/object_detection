@@ -36,8 +36,8 @@ def detect_objs(img_name):
     toDB = index_for_DB(objects, img_name)
 
     # Just debugging purposes
-    print(toDB)
-    show(img, objs)
+    # print(toDB)
+    # show(img, objs)
 
     return toDB
 
@@ -93,13 +93,20 @@ def document_detertor(img_name):
     processed_objs = calc_objects_attr(detected_objs)
     indexed_objs = index_for_DB(processed_objs, img_name)
 
+    # Just for debugging
+    # print(processed_objs, '\n\n\n', bounding_boxes)
     # show(img, detected_objs, bounding_boxes)
-    print(processed_objs, '\n\n\n', bounding_boxes)
 
     return processed_objs, bounding_boxes
 
 
-def index_document(img_name, objs, bounding_boxes):
+def index_document_data(img_name, objs, bounding_boxes):
+    arranged_bounding_boxes = arrange_bounding_boxes_types(img_name, objs, bounding_boxes)
+    indexed_data = index_bounding_boxes(objs, arranged_bounding_boxes, len(bounding_boxes))
+    return indexed_data
+
+
+def arrange_bounding_boxes_types(img_name, objs, bounding_boxes):
     sbb = []
     dbb = []
     ubb = []
@@ -124,12 +131,12 @@ def index_document(img_name, objs, bounding_boxes):
         'ubb': ubb
     }
 
-    indexed_data = index_bounding_boxes(objs, arranged_bounding_boxes, len(bounding_boxes))
-    return indexed_data
+    return arranged_bounding_boxes
 
 
 def index_bounding_boxes(objs, data_to_save, no_of_bounding_boxes):
     data = {}
+    no_of_bounding_boxes = str(no_of_bounding_boxes)
 
     for i, obj in enumerate(objs):
         if i == 0:
@@ -138,11 +145,12 @@ def index_bounding_boxes(objs, data_to_save, no_of_bounding_boxes):
         nth_angle_obj = str(ceil(obj['angle']/DOC_ANGLE_RANGE))
         nth_area_ratio_obj = str(ceil(obj['areaRatio']/DOC_AREA_RATIO_RANGE))
 
-        data[nth_angle_obj] = {
-            nth_area_ratio_obj: {
-                str(no_of_bounding_boxes): data_to_save
-            }
-        }
+        # data[nth_angle_obj] = {
+        #     nth_area_ratio_obj: {
+        #         str(no_of_bounding_boxes): data_to_save
+        #     }
+        # }
+        data[f'{nth_angle_obj}.{nth_area_ratio_obj}.{no_of_bounding_boxes}'] = data_to_save
 
         return data
 
