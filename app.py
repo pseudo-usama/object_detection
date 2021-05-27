@@ -74,16 +74,17 @@ def img_search(img_name):
 @app.route('/search-document', methods=['POST'])
 @validate_submit_search_form
 def document_search(img_name):
-    objs, bbs = document_detertor(img_name)
-
-    if bbs is None:
+    returned = document_detertor(img_name)
+    if returned is None:
         # TODO: Case for 0 or 1 objs
         # TODO: The image should be deleted
         return send_respose('no_img_found')
 
-    indexed = index_bounding_boxes(objs, True, len(bbs))
-    imgs = search_documents_in_db(indexed)
+    objs, bbs = returned
 
+    indexed = index_bounding_boxes(objs, True, len(bbs), add_deviation=True)
+    imgs = search_documents_in_db(indexed)
+    # print(indexed)
     if imgs is None:
         return send_respose('no_img_found')
 

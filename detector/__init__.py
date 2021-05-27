@@ -10,7 +10,6 @@ You can view that database structure at DB/structure.json
 import copy
 from math import ceil
 import cv2
-from numpy import printoptions
 from config import *
 from DB.schema import *
 
@@ -72,8 +71,8 @@ def index_for_DB(objects, imgName, add_deviation=False):
             data[f'2.{nthAreaRatioObj}.{nthAngleObj}'] = imgName
             data_for_search[f'2.{nthAreaRatioObj}.{nthAngleObj}'] = imgName
             if add_deviation:
-                for nAreaObj in range(abs(OBJ_AREA_DEVIATION-nthAreaRatioObj), abs(OBJ_AREA_DEVIATION+nthAreaRatioObj+1)):
-                    for nAngleObj in range(abs(OBJ_ANGLE_DEVIATION-nthAngleObj), abs(OBJ_ANGLE_DEVIATION+nthAngleObj+1)):
+                for nAreaObj in range(nthAreaRatioObj-OBJ_AREA_DEVIATION, nthAreaRatioObj+OBJ_AREA_DEVIATION+1, OBJ_AREA_RATIO_RANGE):
+                    for nAngleObj in range(nthAngleObj-OBJ_ANGLE_DEVIATION, nthAngleObj+OBJ_ANGLE_DEVIATION+1, OBJ_DISTANCE_RATIO_RANGE):
                         data_for_search[f'2.{nAreaObj}.{nAngleObj}'] = imgName
             continue
 
@@ -82,9 +81,9 @@ def index_for_DB(objects, imgName, add_deviation=False):
         data[f'{i+1}.{nthAreaRatioObj}.{nthDistanceobj}.{nthAngleObj}'] = imgName
         data_for_search[f'{i+1}.{nthAreaRatioObj}.{nthDistanceobj}.{nthAngleObj}'] = imgName
         if add_deviation:
-            for nAreaObj in range(abs(OBJ_AREA_DEVIATION-nthAreaRatioObj), abs(OBJ_AREA_DEVIATION+nthAreaRatioObj+1)):
-                for nDistObj in range(abs(OBJ_DISTANCE_DEVIATION-nthDistanceobj), abs(OBJ_DISTANCE_DEVIATION+nthDistanceobj+1)):
-                    for nAngleObj in range(abs(OBJ_ANGLE_DEVIATION-nthAngleObj), abs(OBJ_ANGLE_DEVIATION+nthAngleObj+1)):
+            for nAreaObj in range(nthAreaRatioObj-OBJ_AREA_DEVIATION, nthAreaRatioObj+OBJ_AREA_DEVIATION+1, OBJ_AREA_RATIO_RANGE):
+                for nDistObj in range(nthDistanceobj-OBJ_DISTANCE_DEVIATION, nthDistanceobj+OBJ_DISTANCE_DEVIATION+1, OBJ_DISTANCE_RATIO_RANGE):
+                    for nAngleObj in range(nthAngleObj-OBJ_ANGLE_DEVIATION, nthAngleObj+OBJ_ANGLE_DEVIATION+1, OBJ_AREA_RATIO_RANGE):
                         data_for_search[f'2.{nAreaObj}.{nDistObj}.{nAngleObj}'] = imgName
 
     if add_deviation:
@@ -109,6 +108,7 @@ def document_detertor(img_name):
 
     detected_objs = detect_objects(img)
     if len(detected_objs) == 0:
+        show(img, [])  # Just for debugging
         return None
 
     bounding_boxes = None
@@ -128,7 +128,7 @@ def document_detertor(img_name):
 
 def index_document_data(img_name, objs, bounding_boxes):
     arranged_bounding_boxes = arrange_bounding_boxes_types(img_name, objs, bounding_boxes)
-    indexed_data = index_bounding_boxes(objs, arranged_bounding_boxes, len(bounding_boxes))
+    indexed_data = index_bounding_boxes(objs, arranged_bounding_boxes, len(bounding_boxes), add_deviation=False)
     return indexed_data
 
 
@@ -160,25 +160,40 @@ def arrange_bounding_boxes_types(img_name, objs, bounding_boxes):
     return arranged_bounding_boxes
 
 
-def index_bounding_boxes(objs, data_to_save, no_of_bounding_boxes):
+def index_bounding_boxes(objs, data_to_save, no_of_bounding_boxes, add_deviation=False):
     data = {}
-    no_of_bounding_boxes = str(no_of_bounding_boxes)
+    data_for_search = {}
+    no_of_bounding_boxes = no_of_bounding_boxes
 
     for i, obj in enumerate(objs):
         if i == 0:
             continue
 
-        nth_angle_obj = str(ceil(obj['angle']/DOC_ANGLE_RANGE))
-        nth_area_ratio_obj = str(ceil(obj['areaRatio']/DOC_AREA_RATIO_RANGE))
+        nth_angle_obj = ceil(obj['angle']/DOC_ANGLE_RANGE)
+        nth_area_ratio_obj = ceil(obj['areaRatio']/DOC_AREA_RATIO_RANGE)
 
-        # data[nth_angle_obj] = {
-        #     nth_area_ratio_obj: {
-        #         str(no_of_bounding_boxes): data_to_save
-        #     }
-        # }
-        data[f'{nth_angle_obj}.{nth_area_ratio_obj}.{no_of_bounding_boxes}'] = data_to_save
+        data[f'{str(nth_angle_obj)}.{str(nth_area_ratio_obj)}.{str(no_of_bounding_boxes)}'] = data_to_save
 
-        return data
+        if add_deviation:
+            for nAngleObj in range(nth_angle_obj-OBJ_ANGLE_DEVIATION, nth_angle_obj+OBJ_ANGLE_DEVIATION+1, DOC_ANGLE_RANGE):
+                for nAreaObj in range(nth_area_ratio_obj-DOC_AREA_DEVIATION, nth_area_ratio_obj+DOC_AREA_DEVIATION+1, DOC_AREA_RATIO_RANGE):
+                    # print('1234', nth_area_ratio_obj, nAreaObj)
+                    for nBoundingBox in range(no_of_bounding_boxes-DOC_BOUNDING_BOXES_DEVIATION, no_of_bounding_boxes+DOC_BOUNDING_BOXES_DEVIATION+1):
+                        data_for_search[f'{nAngleObj}.{nAreaObj}.{nBoundingBox}'] = data_to_save
+
+    if add_deviation:
+        # Removing duplicates
+        new_data_for_search = copy.deepcopy(data_for_search)
+
+        for key in data_for_search.keys():
+            dubs = [k for k in data_for_search.keys() if key in k]
+            if len(dubs) > 2:
+                del new_data_for_search[key]
+
+        print(data_for_search)
+        return new_data_for_search
+
+    return data
 
 
 if __name__ == "__main__":
