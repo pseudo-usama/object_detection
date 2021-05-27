@@ -1,0 +1,18 @@
+{
+    "1": {  // n'th Angle obj
+        "1": {  // n'th area ratio obj
+            "1": [{  // n bounding boxes
+                "imgName": "img.jpg",
+                "sbb": [{
+                    "topLeft": [0, 0],
+                    "dimensions": [0, 0],
+                    "text": "the text",
+                    "conf": 84,
+                    "distance": [-466, -47]
+                }],
+                "dbb": [{ /* same as sbb */ }],
+                "ubb": [{ /* same as sbb */ }]
+            }]
+        }
+    }
+}
