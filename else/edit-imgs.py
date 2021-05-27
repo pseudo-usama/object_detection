@@ -31,7 +31,7 @@ def rotate(imgs, transpose):
         out_dir = f'{imgs_dir}/{transpose}'
         if not os.path.exists(out_dir):
             os.mkdir(out_dir)
-        
+
         cmd = f'ffmpeg -y -i "{imgs_dir}/{img_name}{img_extention}" -vf "transpose={transpose}" "{out_dir}/{img_name}{img_extention}"'
         os.system(cmd)
 
@@ -40,7 +40,8 @@ imgs_dir = r'full_path_to_imgs_dir'
 
 
 imgs = [os.path.splitext(img) for img in os.listdir(imgs_dir)
-            if os.path.isfile(os.path.join(imgs_dir, img))]
+        if os.path.isfile(os.path.join(imgs_dir, img)) and
+        (imgs_dir+img).endswith(('.jpg'))]
 
 
 # rotate(imgs, '1')
