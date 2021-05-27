@@ -4,9 +4,11 @@ Like rotate, resize
 """
 
 
-from pyperclip import copy
 import os
+import sys
+
 from PIL import Image
+from pyperclip import copy
 
 
 def resize(scales_arr, imgs):
@@ -36,7 +38,14 @@ def rotate(imgs, transpose):
         os.system(cmd)
 
 
-imgs_dir = r'full_path_to_imgs_dir'
+imgs_dir = r'../images/client/test images/door fan'
+imgs_dir = r'../images/client/test images/sofa table'
+imgs_dir = r'../images/client/test images/sofa chair'
+imgs_dir = r'../images/client/test images/documents/document 1'
+
+
+path_to_this_script = os.path.abspath(os.path.dirname(sys.argv[0]))
+imgs_dir = f'{path_to_this_script}/{imgs_dir}'
 
 
 imgs = [os.path.splitext(img) for img in os.listdir(imgs_dir)
