@@ -38,10 +38,14 @@ def rotate(imgs, transpose):
         os.system(cmd)
 
 
-imgs_dir = r'../images/client/test images/door fan'
-imgs_dir = r'../images/client/test images/sofa table'
-imgs_dir = r'../images/client/test images/sofa chair'
+imgs_dir = r'../images/client/test images/1door fan'
+imgs_dir = r'../images/client/test images/2sofa chair'
+imgs_dir = r'../images/client/test images/3sofa sofa'
+imgs_dir = r'../images/client/test images/4sofa sofa chair'
+imgs_dir = r'../images/client/test images/5sofa table'
+imgs_dir = r'../images/client/test images/6sofa trolly'
 imgs_dir = r'../images/client/test images/documents/document 1'
+imgs_dir = r'../images/client/test images/documents/document 2'
 
 
 path_to_this_script = os.path.abspath(os.path.dirname(sys.argv[0]))
