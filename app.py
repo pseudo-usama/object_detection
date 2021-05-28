@@ -60,7 +60,7 @@ def img_search(img_name):
         # TODO: The image should be deleted
         return send_respose('no_img_found')
 
-    imgs = search_objs_in_db(objs_for_search)
+    imgs = search_objs_in_db(objs_for_search, img_name)
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
     insert_graphical_img_data(objs)
 
@@ -83,7 +83,7 @@ def document_search(img_name):
     objs, bbs = returned
 
     indexed = index_bounding_boxes(objs, True, len(bbs), add_deviation=True)
-    imgs = search_documents_in_db(indexed)
+    imgs = search_documents_in_db(indexed, img_name)
     # print(indexed)
     if imgs is None:
         return send_respose('no_img_found')

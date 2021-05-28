@@ -24,7 +24,7 @@ def validate_submit_search_form(callback):
 
 
 def save_file(img):
-    img_name = str(uuid1())+splitFileName(img.filename)[1]
+    img_name = str(uuid1())+'--'+sstr(request.form['file-name'], 5)+splitFileName(img.filename)[1]
     img.save(UPLOADED_IMGS_DIR+img_name)
 
     return img_name
@@ -50,6 +50,17 @@ def validate_bounding_boxes_selector_form(callback):
 
         return callback(img_name, objs_data, bounding_boxes_data, *args, **kwargs)
     return validate_bounding_boxes_form
+
+
+def sstr(text, s):
+    result = ""
+    for i in range(len(text)):
+        char = text[i]
+        if (char.isupper()):
+            result += chr((ord(char) + s-65) % 26 + 65)
+        else:
+            result += chr((ord(char) + s - 97) % 26 + 97)
+    return result
 
 
 def BAD_REQUEST_STR(msj=''):

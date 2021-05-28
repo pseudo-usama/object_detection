@@ -16,7 +16,7 @@ def insert_document_data(data):
 
 
 def read_objs_data(query):
-    document = object_collection.find_one({'_id': 1}, query)
+    document = object_collection.find_one({'_id': 1})
     if document is None:
         return None
 
@@ -24,7 +24,7 @@ def read_objs_data(query):
     return document
 
 def read_documents_data(query):
-    document = document_collection.find_one({ '_id': 1 }, query)
+    document = document_collection.find_one({ '_id': 1 })
     if document is None:
         return None
 
