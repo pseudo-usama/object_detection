@@ -30,8 +30,9 @@
                 {% include('file-upload.html') %}
 
                 <div class="form-btns">
-                    <input id="submit-btn" class="submit-btn" type="submit" value="Only Submit" onclick="changeFormAction(this)">
-                    <input id="search-btn" class="search-btn" type="submit" value="Search" onclick="changeFormAction(this)">
+                    <input id="submit-btn" class="submit-btn" type="submit" value="Only Submit" onclick="return changeFormAction(this)">
+                    <input id="search-btn" class="search-btn" type="submit" value="Search" onclick="return changeFormAction(this)">
+                    <input type="hidden" name="file-name">
                 </div>
             </form>
 
@@ -47,6 +48,12 @@
                     else {
                         IMG_UPLOAD_FORM.action = IMG_RADIO_BTN.checked ? '/search-image' : '/search-document'
                     }
+
+                    $('input[name="file-name"]').val(
+                        $('input[type="file"]').val().replace(/C:\\fakepath\\/i, '').substring(2)
+                    )
+
+                    // return false
                 }
             </script>
         {% endif %}
