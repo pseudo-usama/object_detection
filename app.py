@@ -71,6 +71,7 @@ def img_search(img_name):
     return send_respose('gallary', imgs=imgs)
 
 
+# When user request to verify document
 @app.route('/search-document', methods=['POST'])
 @validate_submit_search_form
 def document_search(img_name):
