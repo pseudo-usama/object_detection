@@ -40,6 +40,10 @@ def img_submit(img_name):
 @validate_submit_search_form
 def document_submit(img_name):
     objs, bbs = document_detertor(img_name)
+
+    if objs is None or bbs is None:
+        return send_respose('no-bb-or-objs')
+    
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
 
     return send_respose(
@@ -54,13 +58,19 @@ def document_submit(img_name):
 @app.route('/search-image', methods=['POST'])
 @validate_submit_search_form
 def img_search(img_name):
-    objs, objs_for_search = detect_objs(img_name, add_deviation=True)
+    returned = detect_objs(img_name, add_deviation=True)
 
-    if objs is None:
+    if returned is None:
         # TODO: The image should be deleted
         return send_respose('no_img_found')
 
+<<<<<<< HEAD
     imgs = search_objs_in_db(objs_for_search, img_name)
+=======
+    objs, objs_for_search = returned
+
+    imgs = search_objs_in_db(objs_for_search)
+>>>>>>> master
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
     insert_graphical_img_data(objs)
 
@@ -71,16 +81,16 @@ def img_search(img_name):
     return send_respose('gallary', imgs=imgs)
 
 
+# When user request to verify document
 @app.route('/search-document', methods=['POST'])
 @validate_submit_search_form
 def document_search(img_name):
-    returned = document_detertor(img_name)
-    if returned is None:
+    objs, bbs = document_detertor(img_name)
+
+    if objs is None or bbs is None:
         # TODO: Case for 0 or 1 objs
         # TODO: The image should be deleted
         return send_respose('no_img_found')
-
-    objs, bbs = returned
 
     indexed = index_bounding_boxes(objs, True, len(bbs), add_deviation=True)
     imgs = search_documents_in_db(indexed, img_name)
@@ -109,4 +119,4 @@ def send_respose(template, *args, **kwargs):
 
 if __name__ == '__main__':
     print(f'\n{" "*10}*'*5)
-    app.run(debug=True)
+    app.run()
