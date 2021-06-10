@@ -40,6 +40,10 @@ def img_submit(img_name):
 @validate_submit_search_form
 def document_submit(img_name):
     objs, bbs = document_detertor(img_name)
+
+    if objs is None or bbs is None:
+        return send_respose('no-bb-or-objs')
+    
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
 
     return send_respose(
