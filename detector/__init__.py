@@ -25,12 +25,16 @@ from detector.process import find_distances_to_origin
 from detector.show_images import show
 
 
+DEBUG_MODE = True
+
+
 def detect_objs(img_name, add_deviation=False):
     img = cv2.imread(UPLOADED_IMGS_DIR+img_name)    # Loading Image
 
     objs = detect_objects(img)   # Detecting objects
 
-    # show(img, objs) # Just debugging purposes
+    if DEBUG_MODE:
+        show(img, objs) # Just debugging purposes
 
     if len(objs) == 0:
         return None
@@ -109,7 +113,8 @@ def document_detertor(img_name):
     detected_objs = detect_objects(img)
 
     if len(detected_objs) == 0:
-        # show(img, [])  # Just for debugging
+        if DEBUG_MODE:
+            show(img, [])  # Just for debugging
         return None, None
 
     bounding_boxes = None
@@ -122,7 +127,8 @@ def document_detertor(img_name):
 
     # Just for debugging
     # print(processed_objs, '\n\n\n', bounding_boxes)
-    # show(img, detected_objs, bounding_boxes)
+    if DEBUG_MODE:
+        show(img, detected_objs, bounding_boxes)
 
     return processed_objs, bounding_boxes
 
