@@ -64,13 +64,10 @@ def img_search(img_name):
         # TODO: The image should be deleted
         return send_respose('no_img_found')
 
-<<<<<<< HEAD
-    imgs = search_objs_in_db(objs_for_search, img_name)
-=======
     objs, objs_for_search = returned
 
-    imgs = search_objs_in_db(objs_for_search)
->>>>>>> master
+    imgs = search_objs_in_db(objs_for_search, img_name)
+
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
     insert_graphical_img_data(objs)
 
@@ -119,4 +116,4 @@ def send_respose(template, *args, **kwargs):
 
 if __name__ == '__main__':
     print(f'\n{" "*10}*'*5)
-    app.run()
+    app.run(debug=True)
