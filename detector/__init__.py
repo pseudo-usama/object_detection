@@ -107,9 +107,10 @@ def document_detertor(img_name):
     img = cv2.imread(UPLOADED_IMGS_DIR+img_name)    # Loading image
 
     detected_objs = detect_objects(img)
+
     if len(detected_objs) == 0:
         # show(img, [])  # Just for debugging
-        return None
+        return None, None
 
     bounding_boxes = None
     if len(detected_objs) == 2:
