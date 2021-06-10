@@ -22,7 +22,7 @@ def index():
 # When user only submits a image
 @app.route('/submit-image', methods=['POST'])
 @validate_submit_search_form
-def img_submit(img_name):
+def submit_img(img_name):
     objs = detect_objs(img_name)
 
     if objs is None:
@@ -38,7 +38,7 @@ def img_submit(img_name):
 # Document user only submit a document
 @app.route('/submit-document', methods=['POST'])
 @validate_submit_search_form
-def document_submit(img_name):
+def submit_document(img_name):
     objs, bbs = document_detertor(img_name)
 
     if objs is None or bbs is None:
@@ -57,7 +57,7 @@ def document_submit(img_name):
 # When user search for image
 @app.route('/search-image', methods=['POST'])
 @validate_submit_search_form
-def img_search(img_name):
+def search_img(img_name):
     returned = detect_objs(img_name, add_deviation=True)
 
     if returned is None:
@@ -81,7 +81,7 @@ def img_search(img_name):
 # When user request to verify document
 @app.route('/search-document', methods=['POST'])
 @validate_submit_search_form
-def document_search(img_name):
+def search_document(img_name):
     objs, bbs = document_detertor(img_name)
 
     if objs is None or bbs is None:
