@@ -90,7 +90,7 @@ def search_document(img_name):
 
     indexed = index_bounding_boxes(objs, True, len(bbs), add_deviation=True)
     imgs = search_documents_in_db(indexed)
-    # print(indexed)
+
     if imgs is None:
         return send_respose('no_img_found')
 
