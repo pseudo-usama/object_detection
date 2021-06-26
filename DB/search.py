@@ -10,9 +10,13 @@ def search_objs(objs):
     if matches is None:
         return None
 
-    matches.pop('1', None)
+    first_obj = matches.pop('1', None)
+    results = matches
 
-    imgs = flatten(matches)
+    if len(query) == 1 and first_obj is not None:
+        results = first_obj
+
+    imgs = flatten(results)
     if imgs == []:
         return None
 
