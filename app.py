@@ -23,7 +23,7 @@ def index():
 @app.route('/submit-image', methods=['POST'])
 @validate_submit_search_form
 def submit_img(img_name):
-    objs = detect_objs(img_name)
+    objs, _ = detect_objs(img_name)
 
     if objs is None:
         # TODO: Image should be Deleted
@@ -58,13 +58,11 @@ def submit_document(img_name):
 @app.route('/search-image', methods=['POST'])
 @validate_submit_search_form
 def search_img(img_name):
-    returned = detect_objs(img_name, add_deviation=True)
+    objs, objs_for_search = detect_objs(img_name, add_deviation=True)
 
-    if returned is None:
+    if objs is None:
         # TODO: The image should be deleted
         return send_respose('no_img_found')
-
-    objs, objs_for_search = returned
 
     imgs = search_objs_in_db(objs_for_search)
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)

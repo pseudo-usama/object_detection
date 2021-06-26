@@ -37,15 +37,14 @@ def detect_objs(img_name, add_deviation=False):
         show(img, objs) # Just debugging purposes
 
     if len(objs) == 0:
-        return None
+        return None, None
 
     objects = calc_objects_attr(objs)
-    data_to_return = index_for_DB(objects, img_name, add_deviation=add_deviation)   # Contains data for DB, and maybe data for search
+    data, data_to_search = index_for_DB(objects, img_name, add_deviation=add_deviation)   # Contains data for DB, and maybe data for search
 
-    print(data_to_return[0] if isinstance(data_to_return, tuple) else data_to_return)     # Just for dubbuging
-    # print(data_to_return[1])     # Just for dubbuging
+    print(f'\n\n{data}\n\n{data_to_search}\n\n')
 
-    return data_to_return
+    return data, data_to_search
 
 
 # Processing the objects
@@ -104,7 +103,7 @@ def index_for_DB(objects, imgName, add_deviation=False):
         
         return data, new_data_for_search
 
-    return data
+    return data, None
 
 
 # 
