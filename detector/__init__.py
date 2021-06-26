@@ -64,31 +64,33 @@ def calc_objects_attr(extractedObjects):
 def index_for_DB(objects, imgName, add_deviation=False):
     data = {}
     data_for_search = {}
+    no_of_objs = len(objects)
+    
     for i, obj in enumerate(objects):
         if i == 0:
-            data['1'] = imgName
+            data['1.1'] = imgName
             continue
 
         nthAreaRatioObj = ceil(obj['areaRatio']/OBJ_AREA_RATIO_RANGE)
         nthAngleObj = ceil(obj['angle']/OBJ_ANGLE_RANGE)
         if i == 1:
-            data[f'2.{nthAreaRatioObj}.{nthAngleObj}'] = imgName
-            data_for_search[f'2.{nthAreaRatioObj}.{nthAngleObj}'] = imgName
+            data[f'2.{nthAreaRatioObj}.{nthAngleObj}.{no_of_objs}'] = imgName
+            data_for_search[f'2.{nthAreaRatioObj}.{nthAngleObj}.{no_of_objs}'] = imgName
             if add_deviation:
                 for nAreaObj in range(nthAreaRatioObj-OBJ_AREA_DEVIATION, nthAreaRatioObj+OBJ_AREA_DEVIATION+1, OBJ_AREA_RATIO_RANGE):
                     for nAngleObj in range(nthAngleObj-OBJ_ANGLE_DEVIATION, nthAngleObj+OBJ_ANGLE_DEVIATION+1, OBJ_DISTANCE_RATIO_RANGE):
-                        data_for_search[f'2.{nAreaObj}.{nAngleObj}'] = imgName
+                        data_for_search[f'2.{nAreaObj}.{nAngleObj}.{no_of_objs}'] = imgName
             continue
 
         nthDistanceobj = ceil(obj['distanceRatio']/OBJ_DISTANCE_RATIO_RANGE)
 
-        data[f'{i+1}.{nthAreaRatioObj}.{nthDistanceobj}.{nthAngleObj}'] = imgName
-        data_for_search[f'{i+1}.{nthAreaRatioObj}.{nthDistanceobj}.{nthAngleObj}'] = imgName
+        data[f'{i+1}.{nthAreaRatioObj}.{nthDistanceobj}.{nthAngleObj}.{no_of_objs}'] = imgName
+        data_for_search[f'{i+1}.{nthAreaRatioObj}.{nthDistanceobj}.{nthAngleObj}.{no_of_objs}'] = imgName
         if add_deviation:
             for nAreaObj in range(nthAreaRatioObj-OBJ_AREA_DEVIATION, nthAreaRatioObj+OBJ_AREA_DEVIATION+1, OBJ_AREA_RATIO_RANGE):
                 for nDistObj in range(nthDistanceobj-OBJ_DISTANCE_DEVIATION, nthDistanceobj+OBJ_DISTANCE_DEVIATION+1, OBJ_DISTANCE_RATIO_RANGE):
                     for nAngleObj in range(nthAngleObj-OBJ_ANGLE_DEVIATION, nthAngleObj+OBJ_ANGLE_DEVIATION+1, OBJ_AREA_RATIO_RANGE):
-                        data_for_search[f'2.{nAreaObj}.{nDistObj}.{nAngleObj}'] = imgName
+                        data_for_search[f'{i+1}.{nAreaObj}.{nDistObj}.{nAngleObj}.{no_of_objs}'] = imgName
 
     if add_deviation:
         # Removing duplicates
