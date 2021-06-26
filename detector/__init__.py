@@ -113,18 +113,24 @@ def document_detertor(img_name):
     img = cv2.imread(UPLOADED_IMGS_DIR+img_name)    # Loading image
 
     detected_objs = detect_objects(img)
+    bounding_boxes = detect_text(img)
 
-    if len(detected_objs) == 0:
-        if DEBUG_MODE:
-            show(img, [])  # Just for debugging
+    # if len(detected_objs) == 0:
+    #     if DEBUG_MODE:
+    #         show(img, [])  # Just for debugging
+    #     return None, None
+
+    origin = (0, 0)
+    if len(detected_objs) > 1:
+        origin = detected_objs[0]['topLeft']
+    find_distances_to_origin(bounding_boxes, origin)
+
+    if len(bounding_boxes) == 0:
         return None, None
 
-    bounding_boxes = None
-    if len(detected_objs) == 2:
-        bounding_boxes = detect_text(img)
-        find_distances_to_origin(bounding_boxes, detected_objs[0])
-
-    processed_objs = calc_objects_attr(detected_objs)
+    processed_objs = []
+    if len(detected_objs) > 1:
+        processed_objs = calc_objects_attr(detected_objs)
     # indexed_objs = index_for_DB(processed_objs, img_name) # TODO: I've changed the index_for_DB() parameters.
 
     # Just for debugging
@@ -173,6 +179,28 @@ def index_bounding_boxes(objs, data_to_save, no_of_bounding_boxes, add_deviation
     data = {}
     data_for_search = {}
     no_of_bounding_boxes = no_of_bounding_boxes
+
+    if len(objs) == 0:
+        # Here -2 is to indicate on. of objects is 0
+        if add_deviation:
+            for nBoundingBox in range(no_of_bounding_boxes-DOC_BOUNDING_BOXES_DEVIATION, no_of_bounding_boxes+DOC_BOUNDING_BOXES_DEVIATION+1):
+                data_for_search[f'-2.{nBoundingBox}'] = data_to_save
+
+            return data_for_search
+
+        data[f'-2.{no_of_bounding_boxes}'] = data_to_save
+        return data
+
+    if len(objs) == 1:
+        # Here -1 is to indicate on. of objects is 1
+        if add_deviation:
+            for nBoundingBox in range(no_of_bounding_boxes-DOC_BOUNDING_BOXES_DEVIATION, no_of_bounding_boxes+DOC_BOUNDING_BOXES_DEVIATION+1):
+                data_for_search[f'-1.{nBoundingBox}'] = data_to_save
+
+            return data_for_search
+
+        data[f'-1.{no_of_bounding_boxes}'] = data_to_save
+        return data
 
     for i, obj in enumerate(objs):
         if i == 0:

@@ -41,9 +41,9 @@ def submit_img(img_name):
 def submit_document(img_name):
     objs, bbs = document_detertor(img_name)
 
-    if objs is None or bbs is None:
+    if bbs is None:
         return send_respose('no-bb-or-objs')
-    
+
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
 
     return send_respose(
@@ -102,6 +102,7 @@ def search_document(img_name):
 @app.route('/document-bounding-boxes-selector', methods=['POST'])
 @validate_bounding_boxes_selector_form
 def save_template(img_name, objs, bounding_boxes):
+    print(objs, '\n\n\n', bounding_boxes)
     toDB = index_document_data(img_name, objs, bounding_boxes)
     insert_document_data(toDB)
     return redirect('/')
