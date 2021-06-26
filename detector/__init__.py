@@ -68,7 +68,7 @@ def index_for_DB(objects, imgName, add_deviation=False):
     
     for i, obj in enumerate(objects):
         if i == 0:
-            data['1.1'] = imgName
+            data[f'1.{no_of_objs}'] = imgName
             continue
 
         nthAreaRatioObj = ceil(obj['areaRatio']/OBJ_AREA_RATIO_RANGE)
