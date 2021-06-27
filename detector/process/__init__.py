@@ -1,7 +1,7 @@
 def find_distances_to_origin(boundingBoxes, origin):
     for boundingBox in boundingBoxes:
         boundingBox.update(
-            {'distance': distance(boundingBox['topLeft'], origin['topLeft'])}
+            {'distance': distance(boundingBox['topLeft'], origin)}
         )
 
 
