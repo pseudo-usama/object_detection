@@ -115,4 +115,3 @@ def send_respose(template, *args, **kwargs):
 if __name__ == '__main__':
     print(f'\n{" "*10}*'*5)
     app.run()
-

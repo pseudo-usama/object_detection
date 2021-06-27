@@ -25,7 +25,7 @@ from detector.process import find_distances_to_origin
 from detector.show_images import show
 
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 
 def detect_objs(img_name, add_deviation=False):
@@ -42,7 +42,8 @@ def detect_objs(img_name, add_deviation=False):
     objects = calc_objects_attr(objs)
     data, data_to_search = index_for_DB(objects, img_name, add_deviation=add_deviation)   # Contains data for DB, and maybe data for search
 
-    print(f'\n\n{data}\n\n{data_to_search}\n\n')
+    if DEBUG_MODE:
+        print(f'\n\n{data}\n\n{data_to_search}\n\n')
 
     return data, data_to_search
 
@@ -133,8 +134,8 @@ def document_detertor(img_name):
         processed_objs = calc_objects_attr(detected_objs)
     # indexed_objs = index_for_DB(processed_objs, img_name) # TODO: I've changed the index_for_DB() parameters.
 
-    # Just for debugging
-    # print(processed_objs, '\n\n\n', bounding_boxes)
+    if DEBUG_MODE:
+        print(processed_objs, '\n\n\n', bounding_boxes)
     if DEBUG_MODE:
         show(img, detected_objs, bounding_boxes)
 
@@ -214,7 +215,6 @@ def index_bounding_boxes(objs, data_to_save, no_of_bounding_boxes, add_deviation
         if add_deviation:
             for nAngleObj in range(nth_angle_obj-OBJ_ANGLE_DEVIATION, nth_angle_obj+OBJ_ANGLE_DEVIATION+1, DOC_ANGLE_RANGE):
                 for nAreaObj in range(nth_area_ratio_obj-DOC_AREA_DEVIATION, nth_area_ratio_obj+DOC_AREA_DEVIATION+1, DOC_AREA_RATIO_RANGE):
-                    # print('1234', nth_area_ratio_obj, nAreaObj)
                     for nBoundingBox in range(no_of_bounding_boxes-DOC_BOUNDING_BOXES_DEVIATION, no_of_bounding_boxes+DOC_BOUNDING_BOXES_DEVIATION+1):
                         data_for_search[f'{nAngleObj}.{nAreaObj}.{nBoundingBox}'] = data_to_save
 
@@ -227,7 +227,6 @@ def index_bounding_boxes(objs, data_to_save, no_of_bounding_boxes, add_deviation
             if len(dubs) > 2:
                 del new_data_for_search[key]
 
-        print(data_for_search)
         return new_data_for_search
 
     return data
