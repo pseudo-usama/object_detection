@@ -23,7 +23,7 @@ def index():
 @app.route('/submit-image', methods=['POST'])
 @validate_submit_search_form
 def submit_img(img_name):
-    objs = detect_objs(img_name)
+    objs, _ = detect_objs(img_name)
 
     if objs is None:
         # TODO: Image should be Deleted
@@ -41,9 +41,9 @@ def submit_img(img_name):
 def submit_document(img_name):
     objs, bbs = document_detertor(img_name)
 
-    if objs is None or bbs is None:
+    if bbs is None:
         return send_respose('no-bb-or-objs')
-    
+
     move_file(UPLOADED_IMGS_DIR+img_name, INDEXED_IMGS_DIR+img_name)
 
     return send_respose(
@@ -58,13 +58,11 @@ def submit_document(img_name):
 @app.route('/search-image', methods=['POST'])
 @validate_submit_search_form
 def search_img(img_name):
-    returned = detect_objs(img_name, add_deviation=True)
+    objs, objs_for_search = detect_objs(img_name, add_deviation=True)
 
-    if returned is None:
+    if objs is None:
         # TODO: The image should be deleted
         return send_respose('no_img_found')
-
-    objs, objs_for_search = returned
 
     imgs = search_objs_in_db(objs_for_search, img_name)
 
@@ -91,7 +89,7 @@ def search_document(img_name):
 
     indexed = index_bounding_boxes(objs, True, len(bbs), add_deviation=True)
     imgs = search_documents_in_db(indexed, img_name)
-    # print(indexed)
+
     if imgs is None:
         return send_respose('no_img_found')
 
@@ -105,6 +103,7 @@ def search_document(img_name):
 @app.route('/document-bounding-boxes-selector', methods=['POST'])
 @validate_bounding_boxes_selector_form
 def save_template(img_name, objs, bounding_boxes):
+    print(objs, '\n\n\n', bounding_boxes)
     toDB = index_document_data(img_name, objs, bounding_boxes)
     insert_document_data(toDB)
     return redirect('/')
@@ -116,4 +115,5 @@ def send_respose(template, *args, **kwargs):
 
 if __name__ == '__main__':
     print(f'\n{" "*10}*'*5)
-    app.run(debug=True)
+    app.run()
+
