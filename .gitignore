@@ -1,0 +1,10 @@
+__pycache__
+.vscode
+asdf
+
+
+yolov3-spp.weights
+
+
+test/*
+!test/.gitkeep
