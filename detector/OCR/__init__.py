@@ -1,26 +1,28 @@
-import pytesseract
-from pytesseract import Output
-from config import *
-
+from detector.OCR.sub_imgs import find_sub_imgs
+from detector.OCR.recognize_lines import recognize_lines
 
 def detect_text(img):
-    detected_texts = pytesseract.image_to_data(img, output_type=Output.DICT)
+    subImgs = find_sub_imgs(img)
+    lines = find_lines_in_sub_imgs(img, subImgs)
+    lines = sort_lines(lines)
 
-    bounding_boxes = process_texts_data(detected_texts)
-    return bounding_boxes
+    return lines
 
 
-def process_texts_data(texts):
-    bounding_boxes = []
+def find_lines_in_sub_imgs(img, subImgs):
+    lines = []
 
-    n_boxes = len(texts['level'])
-    for i in range(n_boxes):
-        if OCR_MIN_THRESHOLD <= float(texts['conf'][i]) and texts['text'][i].strip() != '':
-            bounding_boxes.append({
-                'topLeft': (texts['left'][i], texts['top'][i]),
-                'dimensions': (texts['width'][i], texts['height'][i]),
-                'text': texts['text'][i],
-                'conf': texts['conf'][i]
-            })
+    for x, y, w, h in subImgs:
+        # Cropping the text block for giving input to OCR
+        cropped = img[y:y + h, x:x + w]
 
-    return bounding_boxes
+        # Apply OCR on the cropped image
+        newLines = recognize_lines(cropped)
+        newLines = [{**line, 'topLeft': (line['topLeft'][0]+x, line['topLeft'][1]+y)} for line in newLines]
+        lines += newLines
+
+    return lines
+
+
+def sort_lines(lines):
+    return sorted(lines, key=lambda line: (line['topLeft'][1], line['topLeft'][0]))
