@@ -3,7 +3,15 @@ __pycache__
 asdf
 
 
+# Weights file
 yolov3-spp.weights
+
+
+# Keeping these dirs but ignoring their files
+/images/test images/*
+/images/client/*
+/images/indexed/*
+!/**/.gitkeep
 
 
 test/*

@@ -1,5 +1,5 @@
 UPLOADED_IMGS_DIR = 'images/client/'
-INDEXED_IMGS_DIR = 'static/indexed-images/'
+INDEXED_IMGS_DIR = 'images/indexed/'
 
 
 OPEN_CV_MIN_THRESHOLD = 0.5     # Out of 1
