@@ -29,20 +29,20 @@ def mark_objects(img, objects):
     for i, obj in enumerate(objects):
         label = classes[obj['classId']]
 
-        bottomRight = (obj['topLeft'][0]+obj['dimentions'][0],
-                       obj['topLeft'][1]+obj['dimentions'][1])
-        topLeft = obj['topLeft']
-        cv2.rectangle(img, topLeft, bottomRight, colors[i], 2, 500)
-        cv2.putText(img, label, topLeft,
+        bottomRight = (obj['pos'][0]+obj['size'][0],
+                       obj['pos'][1]+obj['size'][1])
+        pos = obj['pos']
+        cv2.rectangle(img, pos, bottomRight, colors[i], 2, 500)
+        cv2.putText(img, label, pos,
                     cv2.FONT_HERSHEY_PLAIN, 3, colors[i], 3)
 
 
 # Marks the given texts
 def mark_texts(img, texts):
     for text in texts:
-        bottomRight = (text['topLeft'][0]+text['dimensions']
-                       [0], text['topLeft'][1]+text['dimensions'][1])
-        cv2.rectangle(img, text['topLeft'], bottomRight, (0, 255, 0), 2)
+        bottomRight = (text['pos'][0]+text['size']
+                       [0], text['pos'][1]+text['size'][1])
+        cv2.rectangle(img, text['pos'], bottomRight, (0, 255, 0), 2)
 
 
 # Reading the class names

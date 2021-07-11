@@ -18,11 +18,11 @@ def find_lines_in_sub_imgs(img, subImgs):
 
         # Apply OCR on the cropped image
         newLines = recognize_lines(cropped)
-        newLines = [{**line, 'topLeft': (line['topLeft'][0]+x, line['topLeft'][1]+y)} for line in newLines]
+        newLines = [{**line, 'pos': (line['pos'][0]+x, line['pos'][1]+y)} for line in newLines]
         lines += newLines
 
     return lines
 
 
 def sort_lines(lines):
-    return sorted(lines, key=lambda line: (line['topLeft'][1], line['topLeft'][0]))
+    return sorted(lines, key=lambda line: (line['pos'][1], line['pos'][0]))

@@ -46,12 +46,12 @@ def process_objects(objects, width, height):
                 centerY = int(detection[1]*height)
                 w = int(detection[2]*width)
                 h = int(detection[3]*height)
-                topLeft = (int(centerX-w/2), int(centerY-h/2))
+                pos = (int(centerX-w/2), int(centerY-h/2))
 
                 detectedObjects.append({
                     'center': (centerX, centerY),
-                    'dimentions': (w, h),
-                    'topLeft': topLeft,
+                    'size': (w, h),
+                    'pos': pos,
                     'confidence': float(confidence),
                     'classId': classId
                 })
@@ -65,10 +65,10 @@ def remove_duplicated_objects(objects):
     confidences = []
     for obj in objects:
         boxes.append([
-            int(obj['center'][0]-obj['dimentions'][0]/2),
-            int(obj['center'][1]-obj['dimentions'][1]/2),
-            obj['dimentions'][0],
-            obj['dimentions'][1]
+            int(obj['center'][0]-obj['size'][0]/2),
+            int(obj['center'][1]-obj['size'][1]/2),
+            obj['size'][0],
+            obj['size'][1]
         ])
         classIds.append(obj['classId'])
         confidences.append(obj['confidence'])

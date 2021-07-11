@@ -28,9 +28,9 @@ def to_my_data_structure(texts):
     for i in range(n_boxes):
         if texts['text'][i].strip() != '':
             bb = {
-                'topLeft': (texts['left'][i], texts['top'][i]),
-                'dimensions': (texts['width'][i], texts['height'][i]),
-                'text': texts['text'][i],
+                'pos': (texts['left'][i], texts['top'][i]),
+                'size': (texts['width'][i], texts['height'][i]),
+                'val': texts['text'][i],
                 'conf': texts['conf'][i],
                 'block_num': texts['block_num'][i],
                 'line_num': texts['line_num'][i],
@@ -66,18 +66,18 @@ def words_to_lines(bbs):
     lines = []
     for b in data.values():
         for l in b.values():
-            sorted_line = sorted(l, key=lambda obj:obj['topLeft'][0])
+            sorted_line = sorted(l, key=lambda obj:obj['pos'][0])
 
             firstWord, lastWord = sorted_line[0], sorted_line[-1]
-            width = lastWord['topLeft'][0]+lastWord['dimensions'][0] - firstWord['topLeft'][0]
-            height = max([h['dimensions'][1] for h in sorted_line])
+            width = lastWord['pos'][0]+lastWord['size'][0] - firstWord['pos'][0]
+            height = max([h['size'][1] for h in sorted_line])
 
-            text = ' '.join([t['text'] for t in sorted_line])
+            val = ' '.join([t['val'] for t in sorted_line])
 
             line = {
-                'dimensions': (width, height),
-                'topLeft': firstWord['topLeft'],
-                'text': text
+                'size': (width, height),
+                'pos': firstWord['pos'],
+                'val': val
             }
             lines.append(line)
 
