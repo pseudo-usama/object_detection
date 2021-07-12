@@ -1,5 +1,5 @@
-from detector.OCR.sub_imgs import find_sub_imgs
-from detector.OCR.recognize_lines import recognize_lines
+from .sub_imgs import find_sub_imgs
+from .recognize_lines import recognize_lines
 
 def detect_text(img):
     subImgs = find_sub_imgs(img)
