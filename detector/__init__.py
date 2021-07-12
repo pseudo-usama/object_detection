@@ -1,37 +1,23 @@
 """
-This module detect the objects in images with the help of object_detector/detect/__init__.py
-And then process detected objects data.
-Like calculating area ratios, calculate angles etc
-And then convert that results into a predefined database structure.
-You can view that database structure at DB/structure.json
+This module detect the graphical objects & text in images.
 """
 
 
-import copy
-from math import ceil
 import cv2
-from detector import index_data
 
-# Object detection
-from detector.object_detector import detect_objects
-from detector.processing import *
+from .object_detector import detect_objects
+from .OCR import detect_text
 
-# OCR
-from detector.OCR import detect_text
-from detector.process import find_distances_to_origin
+from config import *
 
-# Indexing
-from detector.index_data import index
-
-# Debugging
-from detector.show_images import show
+from .show_images import show   # Debugging
 
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 
-def detect_objs_and_text(img_path):
-    img = cv2.imread(img_path)
+def detect_objs_and_text(imgName):
+    img = cv2.imread(f'{UPLOADED_IMGS_DIR}/{imgName}')
 
     graphicalObjs = detect_objects(img)
     textualObjs = detect_text(img)
@@ -39,33 +25,9 @@ def detect_objs_and_text(img_path):
     if DEBUG_MODE:
         show(img, objects=graphicalObjs, texts=textualObjs)
 
-    graphicalObjs = calc_objects_attr(graphicalObjs)
+    if DEBUG_MODE:
+        print(graphicalObjs)
+        print(textualObjs)
+        pass
 
-    # print(graphical_objs)
-    # print(textual_objs)
-
-    ssb = textualObjs[0:-2]
-    dbb = [{'topLeft': dbb['topLeft'], 'dimensions': dbb['dimensions'], 'regex': r'/^([a-zA-Z0-9_-]){3,5}$/'}
-           for dbb in textualObjs[-3:-1]]
-
-    indexed_data = index(graphicalObjs, ssb, dbb, img_path)
-
-    print(indexed_data)
-
-
-# Processing the objects
-def calc_objects_attr(objs):
-    data = {}
-
-    find_areas(objs)
-    objs = sort_wrt_area(objs)
-
-    data['distanceRatio'] = find_distances(objs)
-    data['angle'] = find_angles(objs)
-
-    return data
-
-
-#
-# Document detector
-#
+    return graphicalObjs, textualObjs
