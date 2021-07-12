@@ -47,7 +47,7 @@ def mark_texts(img, texts):
 
 # Reading the class names
 classes = []
-with open('detector/coco.names', 'r') as f:
+with open('detector/show_img/coco.names', 'r') as f:
     classes = [line.strip() for line in f.readlines()]
 # Defining different colors for each class
 colors = np.random.uniform(0, 255, size=(len(classes), 3))

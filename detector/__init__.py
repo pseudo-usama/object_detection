@@ -10,7 +10,7 @@ from .OCR import detect_text
 
 from config import *
 
-from .show_images import show   # Debugging
+from .show_img import show   # Debugging
 
 
 DEBUG_MODE = False
