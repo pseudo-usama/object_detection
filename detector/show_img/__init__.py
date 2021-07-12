@@ -1,4 +1,7 @@
-# These function are just for debugging purposes
+"""
+This module show image along with there objects & text bounding boxes.
+This is used just in debugging.
+"""
 
 
 import cv2
@@ -11,14 +14,11 @@ def show(img, objects=None, texts=None):
     if objects is not None:
         mark_objects(img, objects)
     if texts is not None:
-        mark_texts(img, texts)
+        mark_bounding_box(img, texts)
 
-    scale_factor = min(
-        1000 / img.shape[0],
-        1000 / img.shape[1]
-    )
+    scaleFactor = calc_scale_factor(img.shape)
 
-    img = cv2.resize(img, None, fx=scale_factor, fy=scale_factor)
+    img = cv2.resize(img, None, fx=scaleFactor, fy=scaleFactor)
     cv2.imshow('Image', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
@@ -37,12 +37,31 @@ def mark_objects(img, objects):
                     cv2.FONT_HERSHEY_PLAIN, 3, colors[i], 3)
 
 
+def show_bounding_boxes(img, BBs):
+    mark_bounding_box(img, BBs)
+    
+    scaleFactor = calc_scale_factor(img.shape)
+
+    img = cv2.resize(img, None, fx=scaleFactor, fy=scaleFactor)
+    cv2.imshow('Image', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
 # Marks the given texts
-def mark_texts(img, texts):
-    for text in texts:
+def mark_bounding_box(img, BBs):
+    for text in BBs:
         bottomRight = (text['pos'][0]+text['size']
                        [0], text['pos'][1]+text['size'][1])
         cv2.rectangle(img, text['pos'], bottomRight, (0, 255, 0), 2)
+
+
+def calc_scale_factor(shape):
+    scaleFactor = min(
+        1000 / shape[0],
+        1000 / shape[1]
+    )
+    return scaleFactor
 
 
 # Reading the class names
