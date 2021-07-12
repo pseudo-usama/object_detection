@@ -13,7 +13,7 @@ from config import *
 from .show_img import show   # Debugging
 
 
-DEBUG_MODE = False
+DEBUG_MODE = GLOBAL_DEBUG and True
 
 
 def detect_objs_and_text(imgName):

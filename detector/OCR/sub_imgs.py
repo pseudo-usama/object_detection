@@ -3,6 +3,11 @@
 
 import cv2
 
+from config import GLOBAL_DEBUG
+
+
+DEBUG_MODE = GLOBAL_DEBUG and True
+
 
 def find_sub_imgs(img):
     thresh = preprocessing(img)
@@ -49,6 +54,9 @@ def contours_to_sub_imgs_coordinates(img, contours):
         if (h, w) != imgSize:
             # Some times OpenCV add whole image as one contour
             # So we have to ignore this
-            subImgs.append((x, y, w, h))
+            subImgs.append({
+                'pos': (x, y),
+                'size': (w, h)
+            })
 
     return subImgs

@@ -1,8 +1,20 @@
 from .sub_imgs import find_sub_imgs
 from .recognize_lines import recognize_lines
 
+from config import GLOBAL_DEBUG
+from ..show_img import mark_bounding_box
+
+
+DEBUG_MODE = GLOBAL_DEBUG and True
+
+
 def detect_text(img):
     subImgs = find_sub_imgs(img)
+    if DEBUG_MODE:
+        # print(subImgs)
+        print(len(subImgs))
+        mark_bounding_box(img, subImgs)
+
     lines = find_lines_in_sub_imgs(img, subImgs)
     lines = sort_lines(lines)
 
@@ -12,7 +24,10 @@ def detect_text(img):
 def find_lines_in_sub_imgs(img, subImgs):
     lines = []
 
-    for x, y, w, h in subImgs:
+    for i in range(len(subImgs)):
+        x, y = subImgs[i]['pos']
+        w, h = subImgs[i]['size']
+
         # Cropping the text block for giving input to OCR
         cropped = img[y:y + h, x:x + w]
 
