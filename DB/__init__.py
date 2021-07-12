@@ -3,10 +3,10 @@ from pymongo import MongoClient
 from config import MONGO
 
 
-client = MongoClient(MONGO['DB_URL'])
+client = MongoClient(MONGO['dbUrl'])
 
-DB = client[MONGO['CLIENT']]
-COLLECTION = DB[MONGO['COLLECTION']]
+DB = client[MONGO['client']]
+COLLECTION = DB[MONGO['collection']]
 
 
 def insert_to_db(data):

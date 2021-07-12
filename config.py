@@ -7,7 +7,7 @@ OCR_MIN_THRESHOLD = 80          # Out of 100
 
 
 MONGO = {
-    'DB_URL': 'mongodb://localhost:27017',
-    'CLIENT': 'image-based-search-engine',
-    'COLLECTION': 'indexed-data'
+    'dbUrl': 'mongodb://localhost:27017',
+    'client': 'image-based-search-engine',
+    'collection': 'indexed-data'
 }
