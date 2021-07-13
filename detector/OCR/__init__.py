@@ -1,23 +1,27 @@
 from .sub_imgs import find_sub_imgs
 from .recognize_lines import recognize_lines
 
-from config import GLOBAL_DEBUG
 from ..show_img import mark_bounding_box
 
+from config import GLOBAL_DEBUG
+DEBUG_MODE = GLOBAL_DEBUG and False
 
-DEBUG_MODE = GLOBAL_DEBUG and True
+from logger import log
+LOGGER = log(__name__)
 
 
 def detect_text(img):
     subImgs = find_sub_imgs(img)
+    LOGGER.info(f'SubImgs: {len(subImgs)}')
+
     if DEBUG_MODE:
         # print(subImgs)
-        print(len(subImgs))
         mark_bounding_box(img, subImgs)
 
     lines = find_lines_in_sub_imgs(img, subImgs)
     lines = sort_lines(lines)
 
+    LOGGER.info('Text recognition is completed')
     return lines
 
 
