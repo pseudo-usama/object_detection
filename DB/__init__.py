@@ -18,12 +18,8 @@ def insert_to_db(data):
     LOGGER.info('Data saved to DB')
 
 
-def read_from_db(query):
-    document = COLLECTION.find_one({'_id': 1}, query)
-    if document is None:
-        return None
-
-    document.pop('_id', None)
+def read_from_db(query, filterFields):
+    document = COLLECTION.find_one(query, filterFields)
 
     LOGGER.info('Data has been read from DB')
     return document
