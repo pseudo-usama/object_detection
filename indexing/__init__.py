@@ -2,11 +2,16 @@ from .zero_graphical_objs import process_and_index as process_and_index_zero_gra
 from .one_graphical_obj import process_and_index as process_and_index_one_graphical_obj
 from .two_graphical_objs import process_and_index as process_and_index_two_graphical_objs
 
+from .index_for import IndexFor
+
 from logger import log
 LOGGER = log(__name__)
 
 
 def process_and_index(graphicalObjs, BBs, imgName):
+    """
+    Index the data for Database submit
+    """
     indexedData = None
     
     if len(graphicalObjs) == 0:
@@ -18,5 +23,24 @@ def process_and_index(graphicalObjs, BBs, imgName):
     else:
         pass
 
-    LOGGER.info('Data has been indexed')
+    LOGGER.info('Data has been indexed for submitting')
     return indexedData
+
+
+def process_and_index_for_submit_search(graphicalObjs, BBs, imgName):
+    """
+    Index the data for searching
+    """
+    indexedForSubmit, dataForSearch = None, None
+    
+    if len(graphicalObjs) == 0:
+        indexedForSubmit, dataForSearch = process_and_index_zero_graphical_objs(BBs, imgName, indexFor=IndexFor.bothSubmitSearch)
+    elif len(graphicalObjs) == 1:
+        indexedForSubmit, dataForSearch = process_and_index_one_graphical_obj(graphicalObjs[0], BBs, imgName, indexFor=IndexFor.bothSubmitSearch)
+    elif len(graphicalObjs) == 2:
+        indexedForSubmit, dataForSearch = process_and_index_two_graphical_objs(graphicalObjs, BBs, imgName, indexFor=IndexFor.bothSubmitSearch)
+    else:
+        pass
+
+    LOGGER.info('Data has been indexed for searching')
+    return indexedForSubmit, dataForSearch
