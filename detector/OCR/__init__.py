@@ -7,12 +7,12 @@ from config import GLOBAL_DEBUG
 DEBUG_MODE = GLOBAL_DEBUG and False
 
 from logger import log
-LOGGER = log(__name__)
+_LOGGER = log(__name__)
 
 
 def detect_text(img):
     subImgs = find_sub_imgs(img)
-    LOGGER.info(f'SubImgs: {len(subImgs)}')
+    _LOGGER.info(f'SubImgs: {len(subImgs)}')
 
     if DEBUG_MODE:
         # print(subImgs)
@@ -21,7 +21,7 @@ def detect_text(img):
     lines = find_lines_in_sub_imgs(img, subImgs)
     lines = sort_lines(lines)
 
-    LOGGER.info('Text recognition is completed')
+    _LOGGER.info('Text recognition is completed')
     return lines
 
 

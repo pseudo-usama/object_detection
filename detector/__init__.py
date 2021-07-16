@@ -13,7 +13,7 @@ from config import *
 from .show_img import show   # Debugging
 
 from logger import log
-LOGGER = log(__name__)
+_LOGGER = log(__name__)
 
 
 DEBUG_MODE = GLOBAL_DEBUG and False
@@ -28,8 +28,8 @@ def detect_objs_and_text(imgName):
     if DEBUG_MODE:
         show(img, objects=graphicalObjs, texts=textualObjs)
 
-    LOGGER.info(f'Graphical objs: {len(graphicalObjs)}')
-    LOGGER.info(f'Textual objs: {len(textualObjs)}')
+    _LOGGER.info(f'Graphical objs: {len(graphicalObjs)}')
+    _LOGGER.info(f'Textual objs: {len(textualObjs)}')
 
     if DEBUG_MODE:
         print(graphicalObjs)

@@ -9,7 +9,7 @@ import numpy as np
 from config import OPEN_CV_MIN_THRESHOLD
 
 from logger import log
-LOGGER = log(__name__)
+_LOGGER = log(__name__)
 
 
 def detect_objects(img):
@@ -19,7 +19,7 @@ def detect_objects(img):
     processedObjs = process_objects(detectedObjs, width, height)
     removedDuplicatedObjs = remove_duplicated_objects(processedObjs)
 
-    LOGGER.info('Object detection is complete')
+    _LOGGER.info('Object detection is complete')
     return removedDuplicatedObjs
 
 

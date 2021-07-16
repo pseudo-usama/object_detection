@@ -6,7 +6,7 @@ from .more_than_two_graphical_objs import process_and_index as process_and_index
 from .index_for import IndexFor
 
 from logger import log
-LOGGER = log(__name__)
+_LOGGER = log(__name__)
 
 
 def process_and_index(graphicalObjs, BBs, imgName):
@@ -24,7 +24,7 @@ def process_and_index(graphicalObjs, BBs, imgName):
     else:
         indexedData = process_and_index_more_than_two_graphical_objs(graphicalObjs, BBs, imgName)
 
-    LOGGER.info('Data has been indexed for submitting')
+    _LOGGER.info('Data has been indexed for submitting')
     return indexedData
 
 
@@ -43,5 +43,5 @@ def process_and_index_for_submit_search(graphicalObjs, BBs, imgName):
     else:
         indexedForSubmit, dataForSearch = process_and_index_more_than_two_graphical_objs(graphicalObjs, BBs, imgName, indexFor=IndexFor.bothSubmitSearch)
 
-    LOGGER.info('Data has been indexed for searching')
+    _LOGGER.info('Data has been indexed for searching')
     return indexedForSubmit, dataForSearch
